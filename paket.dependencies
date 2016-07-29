@@ -1,0 +1,16 @@
+source https://nuget.org/api/v2
+
+nuget FSharp.Core redirects: force
+
+nuget Endorphin.Core
+nuget log4net
+
+group Build
+    source https://nuget.org/api/v2
+
+    nuget SourceLink.Fake
+    nuget FAKE
+    nuget FSharp.Formatting
+
+    github fsharp/FAKE modules/Octokit/Octokit.fsx
+
