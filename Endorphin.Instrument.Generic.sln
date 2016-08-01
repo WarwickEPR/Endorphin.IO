@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Endorphin.Instrument.Generic.Serial", "src\Endorphin.Instrument.Generic.Serial\Endorphin.Instrument.Generic.Serial.fsproj", "{DA487C50-B45E-4490-A87D-955EFEF4757C}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Endorphin.Instrument.Generic.Tcpip", "src\Endorphin.Instrument.Generic.Tcpip\Endorphin.Instrument.Generic.Tcpip.fsproj", "{F526BEBD-5FA3-4F29-9F11-4BEE003A7DF6}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Endorphin.Instrument.Generic.Line", "src\Endorphin.Instrument.Generic.Line\Endorphin.Instrument.Generic.Line.fsproj", "{ABD7A356-03F4-4A9D-8B28-69B34895BACA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA487C50-B45E-4490-A87D-955EFEF4757C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA487C50-B45E-4490-A87D-955EFEF4757C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA487C50-B45E-4490-A87D-955EFEF4757C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA487C50-B45E-4490-A87D-955EFEF4757C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F526BEBD-5FA3-4F29-9F11-4BEE003A7DF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F526BEBD-5FA3-4F29-9F11-4BEE003A7DF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F526BEBD-5FA3-4F29-9F11-4BEE003A7DF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F526BEBD-5FA3-4F29-9F11-4BEE003A7DF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABD7A356-03F4-4A9D-8B28-69B34895BACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD7A356-03F4-4A9D-8B28-69B34895BACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABD7A356-03F4-4A9D-8B28-69B34895BACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABD7A356-03F4-4A9D-8B28-69B34895BACA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

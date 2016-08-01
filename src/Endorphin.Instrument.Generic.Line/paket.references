@@ -1,0 +1,5 @@
+FSharp.Core
+Endorphin.Core
+log4net
+System.Reactive
+File:Endorphin.Core.Reactive.fs
