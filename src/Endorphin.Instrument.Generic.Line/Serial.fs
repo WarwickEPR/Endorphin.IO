@@ -96,6 +96,7 @@ module Serial =
         interface IDisposable with member __.Dispose() = cts.Cancel(); serialPort.Close()
 
         member __.WriteLine = lineAgent.WriteLine
+        member __.QueryLine = lineAgent.QueryLine
 
     type ObservableSerialInstrument(logname,port,?configuration) =
         let notifier = new NotificationEvent<string>()
@@ -107,6 +108,7 @@ module Serial =
         member __.Error = Error >> notifier.Trigger
         member __.Start = serialInstrument.Start
         member __.WriteLine = serialInstrument.WriteLine
+        member __.QueryLine = serialInstrument.QueryLine
 
         interface IDisposable
             with member x.Dispose() = x.Complete()

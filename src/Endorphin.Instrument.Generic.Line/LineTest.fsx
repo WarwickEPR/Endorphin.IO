@@ -1,4 +1,6 @@
-﻿let extractLine (data:string) =
+// Copyright (c) University of Warwick. All Rights Reserved. Licensed under the Apache License, Version 2.0. See LICENSE.txt in the project root for license information.
+
+let extractLine (data:string) =
     match data.IndexOfAny([| '\r'; '\n' |]) with
     | -1 ->
         (None,data)

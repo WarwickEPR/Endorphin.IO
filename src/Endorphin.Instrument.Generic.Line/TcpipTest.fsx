@@ -10,12 +10,18 @@
 open Endorphin.Instrument.Generic.Line
 open System
 
-log4net.Config.BasicConfigurator.Configure()
+//log4net.Config.BasicConfigurator.Configure()
 
 let queryTcpip = async {
     try
-        use tcpipInstrument = new TcpipInstrument("Tcpip test",(printfn "Line: %s"),"localhost",4000)
+        use tcpipInstrument = new TcpipInstrument("Tcpip test",(fun x -> if x.EndsWith "0000" then printfn "Line: %s" x),"localhost",4000)
         tcpipInstrument.Start()
+        tcpipInstrument.QueryLine "Hello?" |> printfn "Answered: %s"
+        tcpipInstrument.QueryLine "Hello?" |> printfn "Answered 2: %s"
+        let! answer = tcpipInstrument.QueryLineAsync "Hello again?"
+        printfn "Answered async: %s" answer
+        do! Async.Sleep 10000
+        tcpipInstrument.WriteLine "Boo!"
         Console.ReadLine() |> ignore
     with
     | exn -> failwithf "Failed: %A" exn }

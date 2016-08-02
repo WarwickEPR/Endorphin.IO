@@ -11,6 +11,7 @@ module LineAgent =
     type private Message =
     | Receive of string
     | Send of string
+    | Query of string * AsyncReplyChannel<string>
 
     /// Agent to serialise writing linemode command and read emitted data into
     /// lines asynchronously
@@ -40,12 +41,15 @@ module LineAgent =
                 let line, remainder' = extractLine data
                 match line with
                 | None -> (lines,remainder')
-                | Some line -> extractLines' (line :: lines) remainder'
+                | Some line ->
+                    match remainder' with
+                    | "" -> (line :: lines,"")
+                    | _  -> extractLines' (line :: lines) remainder'
             let lines, remainder = extractLines' [] data
             (List.rev lines, remainder)
 
         let messageHandler (mbox:Agent<Message>) =
-            let rec loop (remainder:string)  = async {
+            let rec loop (remainder:string) (pendingQueries:_ list) = async {
                 do! Async.SwitchToThreadPool()
                 let! msg = mbox.Receive()
                 match msg with
@@ -58,18 +62,36 @@ module LineAgent =
                     let lines, remainder' = extractLines (remainder + newData)
                     lines |> List.iter (sprintf "Received line: %s" >> logger.Debug)
                     lines |> List.iter handleLine
-                    return! loop remainder'
-                | Send s -> 
-                    do! writeLine s
-                    return! loop remainder
+
+                    if pendingQueries.IsEmpty then
+                        return! loop remainder' []
+                    else
+                        if pendingQueries.Length >= lines.Length then
+                            let (stillWaiting,ready) = List.splitAt (pendingQueries.Length - lines.Length) pendingQueries
+                            let replyChannels = List.rev ready
+                            List.iter2 (fun (rc:AsyncReplyChannel<string>) line -> rc.Reply line) replyChannels lines
+                            return! loop remainder' stillWaiting
+                        else
+                            let (linesAwaited,spare) = List.splitAt pendingQueries.Length lines
+                            let replyChannels = List.rev pendingQueries
+                            List.iter2 (fun (rc:AsyncReplyChannel<string>) line -> rc.Reply line) replyChannels linesAwaited
+                            return! loop remainder' []
+                | Send line ->
+                    do! writeLine line
+                    return! loop remainder pendingQueries
+                | Query (line,replyChannel) ->
+                    Send line |> mbox.Post // send string
+                    return! loop remainder (replyChannel :: pendingQueries) // reply with next line
             }
-            loop ""
+            loop "" []
 
         let agent = Agent.Start messageHandler
         
         /// Write a line to the serial port
         member __.WriteLine = Send >> agent.Post
-        member __.Receive = Receive >> agent.Post
+        member __.Receive a = a |> Receive |> agent.Post
+        member __.QueryLineAsync line = (fun rc -> Query (line,rc)) |> agent.PostAndAsyncReply
+        member __.QueryLine line = (fun rc -> Query (line,rc)) |> agent.PostAndReply
         member __.Logger = logger
 
 

@@ -45,6 +45,7 @@ module Tcpip =
                 // Assume the client is connected until after a read
                 // "Connected" only gives the state of the most recent connection
                 do! Async.SwitchToNewThread()
+                let ctx = Threading.SynchronizationContext.Current
                 while not cts.IsCancellationRequested do
                     // This version of AsyncRead returns whilst the other blocks
                     try
@@ -52,7 +53,9 @@ module Tcpip =
                         if read > 0 then
                             let stringChunk = System.Text.Encoding.UTF8.GetString buffer.[0..read-1]
                             logger.Debug <| sprintf "Read %d bytes" read
+                            do! Async.SwitchToThreadPool()
                             stringChunk |> lineAgent.Receive
+                            do! Async.SwitchToContext ctx
                     with :?TimeoutException -> () }
 
             Async.Start (readLoop,cts.Token)
@@ -60,6 +63,8 @@ module Tcpip =
         interface IDisposable with member __.Dispose() = cts.Cancel(); client.Close()
 
         member __.WriteLine = lineAgent.WriteLine
+        member __.QueryLine = lineAgent.QueryLine
+        member __.QueryLineAsync = lineAgent.QueryLineAsync
 
     type ObservableTcpipInstrument(logname,hostname,port) =
         let notifier = new NotificationEvent<string>()
@@ -71,6 +76,9 @@ module Tcpip =
         member __.Error = Error >> notifier.Trigger
         member __.Start = tcpipInstrument.Start
         member __.WriteLine = tcpipInstrument.WriteLine
+        member __.QueryLine = tcpipInstrument.QueryLine
+        member __.QueryLineAsync = tcpipInstrument.QueryLineAsync
+
 
         interface IDisposable
             with member x.Dispose() = x.Complete()
