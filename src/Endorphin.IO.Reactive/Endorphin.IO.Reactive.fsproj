@@ -7,12 +7,12 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6e8bfd18-efbf-4fa8-94bc-b6ce343bcc0c}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Endorphin.IO</RootNamespace>
-    <AssemblyName>Endorphin.IO</AssemblyName>
+    <RootNamespace>Endorphin.IO.Reactive</RootNamespace>
+    <AssemblyName>Endorphin.IO.Reactive</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>Endorphin.IO</Name>
+    <Name>Endorphin.IO.Reactive</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +22,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Debug\Endorphin.IO.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Endorphin.IO.Reactive.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\Endorphin.IO.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Endorphin.IO.Reactive.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
