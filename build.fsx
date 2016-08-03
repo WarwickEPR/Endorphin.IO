@@ -16,16 +16,16 @@ open System.IO
 open SourceLink
 #endif
 
-let project = "Endorphin.Instrument.Generic.Serial"
-let summary = "F# driver for a locally built pulse counter."
-let description = "F# driver for a locally built pulse counter."
+let project = "Endorphin.Instrument.Generic"
+let summary = "F# driver generic line-mode serial and TCP/IP presented instruments."
+let description = "Supports sending single line commands, queries and handling streams of line delimited data - by callback or through an Rx observable."
 let authors = [ "University of Warwick EPR and Diamond group" ]
 let licenseHeader = "Copyright (c) University of Warwick. All Rights Reserved. Licensed under the Apache License, Version 2.0. See LICENSE.txt in the project root for license information."
 let tags = "fsharp science"
-let solutionFile  = "Endorphin.Instrument.Generic.Serial.sln"
+let solutionFile  = "Endorphin.Instrument.Generic.sln"
 let gitOwner = "WarwickEPR"
 let gitHome = "https://github.com/" + gitOwner
-let gitName = "Endorphin.Instrument.Generic.Serial"
+let gitName = "Endorphin.Instrument.Generic"
 
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/WarwickEPR"

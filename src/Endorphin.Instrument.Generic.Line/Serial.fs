@@ -2,7 +2,6 @@
 
 namespace Endorphin.Instrument.Generic.Line
 
-open Endorphin.Core
 open System
 open System.IO.Ports
 open System.Threading
@@ -27,13 +26,15 @@ module Serial =
         BaudRate    : int
         DataBits    : int
         StopBits    : StopBits
-        Parity      : Parity }
+        Parity      : Parity
+        LineEnding  : string }
 
     let defaultSerialConfiguration = {
-        BaudRate = 115200
-        DataBits = 8
-        StopBits = StopBits.One
-        Parity   = Parity.None }
+        BaudRate   = 115200
+        DataBits   = 8
+        StopBits   = StopBits.One
+        Parity     = Parity.None
+        LineEnding = "\r\n" }
 
     let configurationOrDefault = function Some c -> c | None -> defaultSerialConfiguration
 
@@ -42,7 +43,7 @@ module Serial =
                                         configuration.Parity,
                                         configuration.DataBits,
                                         configuration.StopBits)
-        serialPort.NewLine <- "\r\n"
+        serialPort.NewLine <- configuration.LineEnding
         serialPort
         
     type private Message =
@@ -76,7 +77,6 @@ module Serial =
                 let readLoop = async {
                     if not serialPort.IsOpen then
                         failwith "Serial port is not open"
-//                    serialPort.ReadTimeout <- 100 // Just wait asynchronously
                     do! Async.SwitchToNewThread()
                     while serialPort.IsOpen do
                         try
@@ -97,19 +97,4 @@ module Serial =
 
         member __.WriteLine = lineAgent.WriteLine
         member __.QueryLine = lineAgent.QueryLine
-
-    type ObservableSerialInstrument(logname,port,?configuration) =
-        let notifier = new NotificationEvent<string>()
-        let notify = Next >> notifier.Trigger
-        let serialInstrument = new SerialInstrument(logname,notify,port,(configurationOrDefault configuration))
-            
-        member __.Lines() : IObservable<string> = notifier.Publish |> Observable.fromNotificationEvent
-        member __.Complete() = Completed |> notifier.Trigger
-        member __.Error = Error >> notifier.Trigger
-        member __.Start = serialInstrument.Start
-        member __.WriteLine = serialInstrument.WriteLine
-        member __.QueryLine = serialInstrument.QueryLine
-
-        interface IDisposable
-            with member x.Dispose() = x.Complete()
-                                      (serialInstrument :> IDisposable).Dispose()
+        member __.QueryLineAsync = lineAgent.QueryLineAsync

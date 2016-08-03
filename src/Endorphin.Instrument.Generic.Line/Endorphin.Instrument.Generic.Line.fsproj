@@ -58,11 +58,13 @@
     <Content Include="packages.config" />
     <Compile Include="LineAgent.fs" />
     <Compile Include="Tcpip.fs" />
-    <None Include="ObservableSerialTest.fsx" />
-    <None Include="SerialTest.fsx" />
-    <Compile Include="Serial.fs" />
     <None Include="TcpipTest.fsx" />
+    <Compile Include="ObservableTcpip.fs" />
     <None Include="ObservableTcpipTest.fsx" />
+    <Compile Include="Serial.fs" />
+    <None Include="SerialTest.fsx" />
+    <Compile Include="ObservableSerial.fs" />
+    <None Include="ObservableSerialTest.fsx" />
     <None Include="LineTest.fsx" />
   </ItemGroup>
   <ItemGroup>
