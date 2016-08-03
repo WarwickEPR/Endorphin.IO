@@ -1,16 +1,16 @@
 type project
 title
-    Endorphin.Instrument.Generic.Line
+    Endorphin.IO
 owners
     University of Warwick EPR and Diamond group
 authors 
     University of Warwick EPR and Diamond group
 projectUrl
-    https://warwickepr.github.io/Endorphin.Instrument.Generic.Line
+    https://warwickepr.github.io/Endorphin.IO
 iconUrl
-    https://raw.githubusercontent.com/WarwickEPR/Endorphin.Instrument.Generic.Line/master/docs/files/img/logo.png
+    https://raw.githubusercontent.com/WarwickEPR/Endorphin.IO/master/docs/files/img/logo.png
 licenseUrl
-    http://github.com/WarwickEPR/Endorphin.Instrument.Generic.Line/blob/master/LICENSE.txt
+    http://github.com/WarwickEPR/Endorphin.IO/blob/master/LICENSE.txt
 requireLicenseAcceptance
     false
 copyright

@@ -1,0 +1,25 @@
+type project
+title
+    Endorphin.IO.Reactive
+owners
+    University of Warwick EPR and Diamond group
+authors 
+    University of Warwick EPR and Diamond group
+projectUrl
+    https://warwickepr.github.io/Endorphin.IO
+iconUrl
+    https://raw.githubusercontent.com/WarwickEPR/Endorphin.IO/master/docs/files/img/logo.png
+licenseUrl
+    http://github.com/WarwickEPR/Endorphin.IO/blob/master/LICENSE.txt
+requireLicenseAcceptance
+    false
+copyright
+    Copyright 2016
+tags
+    fsharp science
+summary
+    F# agent to handle serial or TCP/IP communication with a generic line-mode device
+    with a stream of read lines presented as an Observable
+description
+    F# agent to handle serial or TPC/IP communication with a generic line-mode device
+    with a stream of read lines presented as an Observable

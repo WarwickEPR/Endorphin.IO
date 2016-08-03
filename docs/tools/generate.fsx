@@ -11,17 +11,17 @@
 // (This is the original behaviour of ProjectScaffold prior to multi project support)
 let referenceBinaries = []
 // Web site location for the generated documentation
-let website = "/Endorphin.Instrument.Generic"
+let website = "/Endorphin.IO"
 
-let githubLink = "http://github.com/WarwickEPR/Endorphin.Instrument.Generic"
+let githubLink = "http://github.com/WarwickEPR/Endorphin.IO"
 
 // Specify more information about your project
 let info =
-  [ "project-name", "Endorphin.Instrument.Generic"
+  [ "project-name", "Endorphin.IO"
     "project-author", "University of Warwick EPR and Diamond group"
     "project-summary", "F# driver for a locally built pulse counter." 
     "project-github", githubLink
-    "project-nuget", "http://nuget.org/packages/Endorphin.Instrument.Generic" ]
+    "project-nuget", "http://nuget.org/packages/Endorphin.IO" ]
 
 // --------------------------------------------------------------------------------------
 // For typical project, no changes are needed below

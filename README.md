@@ -1,11 +1,9 @@
-# Endorphin.Instrument.Generic.Line
+# Endorphin.IO
 
-F# agent for line mode communication with a generic serial device
-or TCPIP socket
-
+Utilities for basic communication such as line-mode IO to serial and TCP/IP instruments
 
 Documentation:
-http://WarwickEPR.github.io/Endorphin.Instrument.Generic.Line
+http://WarwickEPR.github.io/Endorphin.IO
 More documentation to follow...
 
 ## Maintainers

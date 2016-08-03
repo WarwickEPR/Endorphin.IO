@@ -1,16 +1,19 @@
 // Copyright (c) University of Warwick. All Rights Reserved. Licensed under the Apache License, Version 2.0. See LICENSE.txt in the project root for license information.
 
-namespace Endorphin.Instrument.Generic.Line
+namespace Endorphin.IO.Reactive
 
 open System
-open System.IO.Ports
-open System.Threading
 open Endorphin.Core
 
-type ObservableSerialInstrument(logname,port,?configuration) =
+type SerialInstrument(logname,port,?configuration) =
     let notifier = new NotificationEvent<string>()
     let notify = Next >> notifier.Trigger
-    let serialInstrument = new SerialInstrument(logname,notify,port,(configurationOrDefault configuration))
+    let serialInstrument =
+        match configuration with
+        | None ->
+            new Endorphin.IO.Serial.SerialInstrument(logname,notify,port)
+        | Some serialConfig -> 
+            new Endorphin.IO.Serial.SerialInstrument(logname,notify,port,serialConfig)
             
     member __.Lines() : IObservable<string> = notifier.Publish |> Observable.fromNotificationEvent
     member __.Complete() = Completed |> notifier.Trigger

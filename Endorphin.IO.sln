@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Endorphin.Instrument.Generic.Line", "src\Endorphin.Instrument.Generic.Line\Endorphin.Instrument.Generic.Line.fsproj", "{ABD7A356-03F4-4A9D-8B28-69B34895BACA}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Endorphin.IO", "src\Endorphin.IO\Endorphin.IO.fsproj", "{ABD7A356-03F4-4A9D-8B28-69B34895BACA}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Endorphin.IO.Reactive", "src\Endorphin.IO.Reactive\Endorphin.IO.Reactive.fsproj", "{6E8BFD18-EFBF-4FA8-94BC-B6CE343BCC0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{ABD7A356-03F4-4A9D-8B28-69B34895BACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABD7A356-03F4-4A9D-8B28-69B34895BACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABD7A356-03F4-4A9D-8B28-69B34895BACA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E8BFD18-EFBF-4FA8-94BC-B6CE343BCC0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E8BFD18-EFBF-4FA8-94BC-B6CE343BCC0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E8BFD18-EFBF-4FA8-94BC-B6CE343BCC0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E8BFD18-EFBF-4FA8-94BC-B6CE343BCC0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,14 +5,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{abd7a356-03f4-4a9d-8b28-69b34895baca}</ProjectGuid>
+    <ProjectGuid>{6e8bfd18-efbf-4fa8-94bc-b6ce343bcc0c}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Endorphin.Instrument.Generic.Line</RootNamespace>
-    <AssemblyName>Endorphin.Instrument.Generic.Line</AssemblyName>
+    <RootNamespace>Endorphin.IO</RootNamespace>
+    <AssemblyName>Endorphin.IO</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>Endorphin.Instrument.Generic.Line</Name>
+    <Name>Endorphin.IO</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +22,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Debug\Endorphin.Instrument.Generic.Line.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Endorphin.IO.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\Endorphin.Instrument.Generic.Line.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Endorphin.IO.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
@@ -56,22 +56,23 @@
     </Compile>
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="packages.config" />
-    <Compile Include="LineAgent.fs" />
-    <Compile Include="Tcpip.fs" />
-    <None Include="TcpipTest.fsx" />
     <Compile Include="ObservableTcpip.fs" />
     <None Include="ObservableTcpipTest.fsx" />
-    <Compile Include="Serial.fs" />
-    <None Include="SerialTest.fsx" />
     <Compile Include="ObservableSerial.fs" />
     <None Include="ObservableSerialTest.fsx" />
-    <None Include="LineTest.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Endorphin.IO\Endorphin.IO.fsproj">
+      <Name>Endorphin.IO</Name>
+      <Project>{abd7a356-03f4-4a9d-8b28-69b34895baca}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

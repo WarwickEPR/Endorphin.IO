@@ -4,7 +4,7 @@
 #I "../../bin"
 
 (**
-Endorphin.Instrument.Generic
+Endorphin.IO
 ======================
 
 Documentation
@@ -13,9 +13,9 @@ Documentation
   <div class="span1"></div>
   <div class="span6">
     <div class="well well-small" id="nuget">
-      The Endorphin.Instrument.Generic.Line library can be <a href="https://nuget.org/packages/Endorphin.Instrument.Generic">installed from NuGet</a>:
-      <pre>PM> Install-Package Endorphin.Instrument.Generic -Pre
-PM> Install-Package Endorphin.Instrument.Generic -Pre</pre>
+      The Endorphin.IO library can be <a href="https://nuget.org/packages/Endorphin.IO">installed from NuGet</a>:
+      <pre>PM> Install-Package Endorphin.IO -Pre
+PM> Install-Package Endorphin.IO -Pre</pre>
     </div>
   </div>
   <div class="span1"></div>
@@ -27,8 +27,8 @@ Example
 This example demonstrates using a function defined in this sample library.
 
 *)
-#r "Endorphin.Instrument.Generic.Line/Endorphin.Instrument.Generic.Line.dll"
-open Endorphin.Instrument.Generic.Line
+#r "Endorphin.IO/Endorphin.IO.dll"
+open Endorphin.IO
 
 (**
 Some more info
@@ -58,9 +58,9 @@ The library is available under Public Domain license, which allows modification 
 redistribution for both commercial and non-commercial purposes. For more information see the
 [License file][license] in the GitHub repository.
 
-  [content]: https://github.com/fsprojects/Endorphin.Instrument.Generic.Line/tree/master/docs/content
-  [gh]: https://github.com/fsprojects/Endorphin.Instrument.Generic.Line
-  [issues]: https://github.com/fsprojects/Endorphin.Instrument.Generic.Line/issues
-  [readme]: https://github.com/fsprojects/Endorphin.Instrument.Generic.Line/blob/master/README.md
-  [license]: https://github.com/fsprojects/Endorphin.Instrument.Generic.Line/blob/master/LICENSE.txt
+  [content]: https://github.com/fsprojects/Endorphin.IO/tree/master/docs/content
+  [gh]: https://github.com/fsprojects/Endorphin.IO
+  [issues]: https://github.com/fsprojects/Endorphin.IO/issues
+  [readme]: https://github.com/fsprojects/Endorphin.IO/blob/master/README.md
+  [license]: https://github.com/fsprojects/Endorphin.IO/blob/master/LICENSE.txt
 *)

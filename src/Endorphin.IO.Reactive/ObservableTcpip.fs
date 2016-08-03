@@ -1,13 +1,13 @@
 // Copyright (c) University of Warwick. All Rights Reserved. Licensed under the Apache License, Version 2.0. See LICENSE.txt in the project root for license information.
-namespace Endorphin.Instrument.Generic.Line
+namespace Endorphin.IO.Reactive
 
 open Endorphin.Core
 open System
 
-type ObservableTcpipInstrument(logname,hostname,port) =
+type TcpipInstrument(logname,hostname,port) =
     let notifier = new NotificationEvent<string>()
     let notify = Next >> notifier.Trigger
-    let tcpipInstrument = new TcpipInstrument(logname,notify,hostname,port)
+    let tcpipInstrument = new Endorphin.IO.TcpipInstrument(logname,notify,hostname,port)
             
     member __.Lines() : IObservable<string> = notifier.Publish |> Observable.fromNotificationEvent
     member __.Complete() = Completed |> notifier.Trigger

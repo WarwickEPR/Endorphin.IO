@@ -16,16 +16,16 @@ open System.IO
 open SourceLink
 #endif
 
-let project = "Endorphin.Instrument.Generic"
-let summary = "F# driver generic line-mode serial and TCP/IP presented instruments."
-let description = "Supports sending single line commands, queries and handling streams of line delimited data - by callback or through an Rx observable."
+let project = "Endorphin.IO"
+let summary = "Utilities for basic communication such as line-mode IO to serial and TCP/IP instruments"
+let description = "Utilities for basic communication such as line-mode IO to serial and TCP/IP instruments"
 let authors = [ "University of Warwick EPR and Diamond group" ]
 let licenseHeader = "Copyright (c) University of Warwick. All Rights Reserved. Licensed under the Apache License, Version 2.0. See LICENSE.txt in the project root for license information."
 let tags = "fsharp science"
-let solutionFile  = "Endorphin.Instrument.Generic.sln"
+let solutionFile  = "Endorphin.IO.sln"
 let gitOwner = "WarwickEPR"
 let gitHome = "https://github.com/" + gitOwner
-let gitName = "Endorphin.Instrument.Generic"
+let gitName = "Endorphin.IO"
 
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/WarwickEPR"

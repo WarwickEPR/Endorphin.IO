@@ -5,9 +5,9 @@
 #r "System.Core.dll"
 #r "System.dll"
 #r "System.Numerics.dll"
-#r "./bin/Debug/Endorphin.Instrument.Generic.Line.dll"
+#r "./bin/Debug/Endorphin.IO.dll"
 
-open Endorphin.Instrument.Generic.Line
+open Endorphin.IO
 open System
 
 log4net.Config.BasicConfigurator.Configure()
