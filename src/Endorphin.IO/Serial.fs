@@ -29,16 +29,16 @@ module Serial =
         Parity      : Parity
         LineEnding  : string }
 
-    let defaultSerialConfiguration = {
+    let private defaultSerialConfiguration = {
         BaudRate   = 115200
         DataBits   = 8
         StopBits   = StopBits.One
         Parity     = Parity.None
         LineEnding = "\r\n" }
 
-    let configurationOrDefault = function Some c -> c | None -> defaultSerialConfiguration
+    let private configurationOrDefault = function Some c -> c | None -> defaultSerialConfiguration
 
-    let createSerialPort comPort configuration =
+    let private createSerialPort comPort configuration =
         let serialPort = new SerialPort(comPort, configuration.BaudRate,
                                         configuration.Parity,
                                         configuration.DataBits,
@@ -70,10 +70,14 @@ module Serial =
         let bufferLen = 2 <<< 13 // 16k
         let buffer :byte[] = Array.zeroCreate(bufferLen)
 
-        member __.Start() =
+        do
             try
                 serialPort.Open()
+            with
+            | exn -> failwithf "Failed to open serial port: %A" exn
 
+        member __.StartReading() =
+            try
                 let readLoop = async {
                     if not serialPort.IsOpen then
                         failwith "Serial port is not open"
@@ -91,10 +95,11 @@ module Serial =
                 Async.Start (readLoop,cts.Token)
 
             with
-            | exn -> failwithf "Failed to open serial port: %A" exn
+            | exn -> failwithf "Failed to start serial port read loop: %A" exn
 
         interface IDisposable with member __.Dispose() = cts.Cancel(); serialPort.Close()
 
         member __.WriteLine = lineAgent.WriteLine
         member __.QueryLine = lineAgent.QueryLine
         member __.QueryLineAsync = lineAgent.QueryLineAsync
+        member __.SerialPort = serialPort

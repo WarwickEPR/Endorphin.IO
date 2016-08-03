@@ -21,5 +21,5 @@ summary
     F# agent to handle serial or TCP/IP communication with a generic line-mode device
     with a stream of read lines presented as an Observable
 description
-    F# agent to handle serial or TPC/IP communication with a generic line-mode device
+    F# agent to handle serial or TCP/IP communication with a generic line-mode device
     with a stream of read lines presented as an Observable
