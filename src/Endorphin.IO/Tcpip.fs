@@ -62,5 +62,5 @@ type TcpipInstrument(logname:string,lineHandler,hostname:string,port,?lineEnding
     member __.WriteLine = lineAgent.WriteLine
     member __.QueryLine = lineAgent.QueryLine
     member __.QueryLineAsync = lineAgent.QueryLineAsync
-    member __.QueryUntilPrompt = lineAgent.QueryUntilPrompt
-    member __.QueryUntilPromptAsync = lineAgent.QueryUntilPromptAsync
+    member __.QueryUntil = lineAgent.QueryUntil
+    member __.QueryUntilAsync = lineAgent.QueryUntilAsync

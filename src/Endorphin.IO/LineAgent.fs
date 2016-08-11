@@ -109,15 +109,13 @@ type LineAgent(writeLine,handleLine,logname:string) =
         loop "" [] []
 
     let agent = MailboxProcessor.Start messageHandler
-        
-    let equalsPrompt (prompt:string) = prompt.Equals 
 
     /// Write a line to the serial port
     member __.WriteLine = Send >> agent.Post
     member __.Receive a = a |> Receive |> agent.Post
     member __.QueryLineAsync line = (fun rc -> QueryNextLine (line,rc)) |> agent.PostAndAsyncReply
     member __.QueryLine line = (fun rc -> QueryNextLine (line,rc)) |> agent.PostAndReply
-    member __.QueryUntilPromptAsync prompt query = (fun rc -> QueryUntil (query,equalsPrompt prompt,rc)) |> agent.PostAndAsyncReply
-    member __.QueryUntilPrompt prompt query = (fun rc -> QueryUntil (query,equalsPrompt prompt,rc)) |> agent.PostAndReply
+    member __.QueryUntilAsync condition query = (fun rc -> QueryUntil (query,condition,rc)) |> agent.PostAndAsyncReply
+    member __.QueryUntil condition query = (fun rc -> QueryUntil (query,condition,rc)) |> agent.PostAndReply
     member __.Logger = logger
     

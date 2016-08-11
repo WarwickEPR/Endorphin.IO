@@ -18,10 +18,10 @@ let queryTcpip = async {
         tcpipInstrument.Start()
         tcpipInstrument.QueryLine "Hello?" |> printfn "Answered: %s"
         tcpipInstrument.QueryLine "Hello?" |> printfn "Answered 2: %s"
-        tcpipInstrument.QueryUntilPrompt ">" "Again?" |> List.iteri (printfn "Answered %d: %s")
+        tcpipInstrument.QueryUntil (fun x -> x.StartsWith ">") "Again?" |> List.iteri (printfn "Answered %d: %s")
         let! answer = tcpipInstrument.QueryLineAsync "Hello again?"
         printfn "Answered async: %s" answer
-        do! Async.Sleep 10000
+        do! Async.Sleep 1000
         tcpipInstrument.WriteLine "Boo!"
         Console.ReadLine() |> ignore
     with
