@@ -1,3 +1,6 @@
+## 0.1.4 - 2016-08-11
+- Add support for command responses terminated with a delimiter such as a prompt
+
 ## 0.1.3 - 2016-08-03
 - Separate opening the serial socket from starting the read loop to allow initialisation
 
