@@ -5,7 +5,11 @@ namespace Endorphin.IO
 type private Message =
 | Receive of string
 | Send of string
-| Query of string * AsyncReplyChannel<string>
+| QueryNextLine of query : string * AsyncReplyChannel<string>
+| QueryUntil of query: string * condition: (string -> bool) * AsyncReplyChannel<string list>
+
+type ReplyConsumer = string list -> string list option
+
 
 /// Agent to serialise writing linemode command and read emitted data into
 /// lines asynchronously. StreamBuffer doesn't
@@ -13,6 +17,21 @@ type private Message =
 /// e.g. if commands are not acknowledged but the device may stream line-mode data
 type LineAgent(writeLine,handleLine,logname:string) =
     let logger = log4net.LogManager.GetLogger logname
+
+    let nextLineReply (rc:AsyncReplyChannel<string>) =
+        function
+        | next :: rest ->
+            rc.Reply next
+            Some rest
+        | _ -> None
+
+    let consumeUntilReply (rc:AsyncReplyChannel<string list>) expected (lines: string list) =
+        match List.tryFindIndex expected lines with
+        | None -> None
+        | Some i ->
+            let (reply,rest) = List.splitAt i lines
+            rc.Reply reply
+            Some rest.Tail
 
     let extractLine (data:string) =
         match data.IndexOfAny([| '\r'; '\n' |]) with
@@ -43,7 +62,7 @@ type LineAgent(writeLine,handleLine,logname:string) =
         (List.rev lines, remainder)
 
     let messageHandler (mbox:MailboxProcessor<Message>) =
-        let rec loop (remainder:string) (pendingQueries:_ list) = async {
+        let rec loop (remainder:string) (receivedLines:string list) (pendingQueries:ReplyConsumer list) = async {
             do! Async.SwitchToThreadPool()
             let! msg = mbox.Receive()
             match msg with
@@ -53,37 +72,52 @@ type LineAgent(writeLine,handleLine,logname:string) =
                 // emit any completed lines.
                 // Save any incomplete line fragment to combine with the next block
                     
-                let lines, remainder' = extractLines (remainder + newData)
-                lines |> List.iter (sprintf "Received line: %s" >> logger.Debug)
-                lines |> List.iter handleLine
+                let newLines, remainder' = extractLines (remainder + newData)
+                newLines |> List.iter (sprintf "Received line: %s" >> logger.Debug)
+                newLines |> List.iter handleLine
+
+                let rec handleConsumers lines (consumers : ReplyConsumer list) =
+                    match consumers with
+                    | consumer :: rest ->
+                        match consumer lines with
+                        | Some lines' -> // Satisfied this one, try to satisfy the rest with the remaining lines
+                            handleConsumers lines' rest
+                        | None -> // Did not find enough to satisfy consumer
+                            (lines,consumers)
+                    | [] ->
+                        (lines,[])
+                    
 
                 if pendingQueries.IsEmpty then
-                    return! loop remainder' []
+                    return! loop remainder' [] [] // Forget pending lines as no-one is waiting for them
                 else
-                    if pendingQueries.Length >= lines.Length then
-                        let (stillWaiting,ready) = List.splitAt (pendingQueries.Length - lines.Length) pendingQueries
-                        let replyChannels = List.rev ready
-                        List.iter2 (fun (rc:AsyncReplyChannel<string>) line -> rc.Reply line) replyChannels lines
-                        return! loop remainder' stillWaiting
-                    else
-                        let (linesAwaited,spare) = List.splitAt pendingQueries.Length lines
-                        let replyChannels = List.rev pendingQueries
-                        List.iter2 (fun (rc:AsyncReplyChannel<string>) line -> rc.Reply line) replyChannels linesAwaited
-                        return! loop remainder' []
+                    let lines = receivedLines @ newLines
+                    let consumerQ = List.rev pendingQueries
+                    let (remainingLines',consumerQ') = handleConsumers lines consumerQ
+                    return! loop remainder' remainingLines' (List.rev consumerQ')
+
             | Send line ->
                 do! writeLine line
-                return! loop remainder pendingQueries
-            | Query (line,replyChannel) ->
+                return! loop remainder receivedLines pendingQueries
+            | QueryNextLine (line,replyChannel) ->
                 Send line |> mbox.Post // send string
-                return! loop remainder (replyChannel :: pendingQueries) // reply with next line
+                return! loop remainder receivedLines ((nextLineReply replyChannel) :: pendingQueries) // reply with next line
+            | QueryUntil (query,condition,replyChannel) ->
+                Send query |> mbox.Post
+                return! loop remainder receivedLines ((consumeUntilReply replyChannel condition) :: pendingQueries)
         }
-        loop "" []
+        loop "" [] []
 
     let agent = MailboxProcessor.Start messageHandler
         
+    let equalsPrompt (prompt:string) = prompt.Equals 
+
     /// Write a line to the serial port
     member __.WriteLine = Send >> agent.Post
     member __.Receive a = a |> Receive |> agent.Post
-    member __.QueryLineAsync line = (fun rc -> Query (line,rc)) |> agent.PostAndAsyncReply
-    member __.QueryLine line = (fun rc -> Query (line,rc)) |> agent.PostAndReply
+    member __.QueryLineAsync line = (fun rc -> QueryNextLine (line,rc)) |> agent.PostAndAsyncReply
+    member __.QueryLine line = (fun rc -> QueryNextLine (line,rc)) |> agent.PostAndReply
+    member __.QueryUntilPromptAsync prompt query = (fun rc -> QueryUntil (query,equalsPrompt prompt,rc)) |> agent.PostAndAsyncReply
+    member __.QueryUntilPrompt prompt query = (fun rc -> QueryUntil (query,equalsPrompt prompt,rc)) |> agent.PostAndReply
     member __.Logger = logger
+    
