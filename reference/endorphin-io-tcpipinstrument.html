@@ -55,10 +55,10 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '24', 24)" onmouseover="showTip(event, '24', 24)">
+          <code onmouseout="hideTip(event, '26', 26)" onmouseover="showTip(event, '26', 26)">
             new(...)
           </code>
-          <div class="tip" id="24">
+          <div class="tip" id="26">
             <strong>Signature:</strong> (logname:string * lineHandler:(string -&gt; unit) * hostname:string * port:int * lineEnding:string option) -&gt; TcpipInstrument<br />
                       </div>
         </td>
@@ -82,10 +82,10 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '25', 25)" onmouseover="showTip(event, '25', 25)">
+          <code onmouseout="hideTip(event, '27', 27)" onmouseover="showTip(event, '27', 27)">
             QueryLine
           </code>
-          <div class="tip" id="25">
+          <div class="tip" id="27">
             <strong>Signature:</strong> string -&gt; string<br />
                       </div>
         </td>
@@ -101,10 +101,10 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '26', 26)" onmouseover="showTip(event, '26', 26)">
+          <code onmouseout="hideTip(event, '28', 28)" onmouseover="showTip(event, '28', 28)">
             QueryLineAsync
           </code>
-          <div class="tip" id="26">
+          <div class="tip" id="28">
             <strong>Signature:</strong> string -&gt; Async&lt;string&gt;<br />
                       </div>
         </td>
@@ -120,10 +120,48 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '27', 27)" onmouseover="showTip(event, '27', 27)">
+          <code onmouseout="hideTip(event, '29', 29)" onmouseover="showTip(event, '29', 29)">
+            QueryUntil
+          </code>
+          <div class="tip" id="29">
+            <strong>Signature:</strong> (string -&gt; bool) -&gt; string -&gt; string list<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/Tcpip.fs#L65-65" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+              <p>CompiledName: <code>get_QueryUntil</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '30', 30)" onmouseover="showTip(event, '30', 30)">
+            QueryUntilAsync
+          </code>
+          <div class="tip" id="30">
+            <strong>Signature:</strong> (string -&gt; bool) -&gt; string -&gt; Async&lt;string list&gt;<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/Tcpip.fs#L66-66" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+              <p>CompiledName: <code>get_QueryUntilAsync</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '31', 31)" onmouseover="showTip(event, '31', 31)">
             Start()
           </code>
-          <div class="tip" id="27">
+          <div class="tip" id="31">
             <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
@@ -138,10 +176,10 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '28', 28)" onmouseover="showTip(event, '28', 28)">
+          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
             WriteLine
           </code>
-          <div class="tip" id="28">
+          <div class="tip" id="32">
             <strong>Signature:</strong> string -&gt; unit<br />
                       </div>
         </td>

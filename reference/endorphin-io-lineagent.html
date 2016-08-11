@@ -63,7 +63,7 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L14-14" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L18-18" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -90,7 +90,7 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L89-89" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L120-120" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -109,7 +109,7 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L88-88" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L117-117" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -127,7 +127,7 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L87-87" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L116-116" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -138,14 +138,14 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '22', 22)" onmouseover="showTip(event, '22', 22)">
-            Receive(a)
+            QueryUntil(condition query)
           </code>
           <div class="tip" id="22">
-            <strong>Signature:</strong> a:string -&gt; unit<br />
+            <strong>Signature:</strong> (condition:(string -&gt; bool)) -&gt; query:string -&gt; string list<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L86-86" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L119-119" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -156,14 +156,50 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '23', 23)" onmouseover="showTip(event, '23', 23)">
-            WriteLine
+            QueryUntilAsync(condition query)
           </code>
           <div class="tip" id="23">
+            <strong>Signature:</strong> (condition:(string -&gt; bool)) -&gt; query:string -&gt; Async&lt;string list&gt;<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L118-118" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '24', 24)" onmouseover="showTip(event, '24', 24)">
+            Receive(a)
+          </code>
+          <div class="tip" id="24">
+            <strong>Signature:</strong> a:string -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L115-115" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '25', 25)" onmouseover="showTip(event, '25', 25)">
+            WriteLine
+          </code>
+          <div class="tip" id="25">
             <strong>Signature:</strong> string -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L85-85" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L114-114" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
