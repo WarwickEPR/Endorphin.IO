@@ -8,7 +8,7 @@ type private Message =
 | QueryNextLine of query : string * AsyncReplyChannel<string>
 | QueryUntil of query: string * condition: (string -> bool) * AsyncReplyChannel<string list>
 
-type ReplyConsumer = string list -> string list option
+type ReplyConsumer = string list -> string -> (string list * string) option
 
 
 /// Agent to serialise writing linemode command and read emitted data into
@@ -18,20 +18,29 @@ type ReplyConsumer = string list -> string list option
 type LineAgent(writeLine,handleLine,logname:string) =
     let logger = log4net.LogManager.GetLogger logname
 
-    let nextLineReply (rc:AsyncReplyChannel<string>) =
-        function
+    // Just wait for the next single line and return that
+    let nextLineReply (rc:AsyncReplyChannel<string>) lines remainder =
+        match lines with
         | next :: rest ->
             rc.Reply next
-            Some rest
+            Some (rest,remainder)
         | _ -> None
 
-    let consumeUntilReply (rc:AsyncReplyChannel<string list>) expected (lines: string list) =
+    // Waits until a line matches the supplied condition
+    // If the required line is the start of the latest incomplete line, such as a prompt,
+    // then consume that line immediately and return the preceding lines
+    let consumeUntilReply (rc:AsyncReplyChannel<string list>) expected (lines: string list) remainder =
         match List.tryFindIndex expected lines with
-        | None -> None
+        | None ->
+            if expected remainder then
+                rc.Reply lines
+                Some ([],"")
+            else
+                None
         | Some i ->
             let (reply,rest) = List.splitAt i lines
             rc.Reply reply
-            Some rest.Tail
+            Some (rest.Tail,remainder)
 
     let extractLine (data:string) =
         match data.IndexOfAny([| '\r'; '\n' |]) with
@@ -76,16 +85,16 @@ type LineAgent(writeLine,handleLine,logname:string) =
                 newLines |> List.iter (sprintf "Received line: %s" >> logger.Debug)
                 newLines |> List.iter handleLine
 
-                let rec handleConsumers lines (consumers : ReplyConsumer list) =
+                let rec handleConsumers lines remainder (consumers : ReplyConsumer list) =
                     match consumers with
                     | consumer :: rest ->
-                        match consumer lines with
-                        | Some lines' -> // Satisfied this one, try to satisfy the rest with the remaining lines
-                            handleConsumers lines' rest
+                        match consumer lines remainder' with
+                        | Some (lines',remainder') -> // Satisfied this one, try to satisfy the rest with the remaining lines
+                            handleConsumers lines' remainder' rest
                         | None -> // Did not find enough to satisfy consumer
-                            (lines,consumers)
+                            (lines,remainder',consumers)
                     | [] ->
-                        (lines,[])
+                        (lines,remainder,[])
                     
 
                 if pendingQueries.IsEmpty then
@@ -93,18 +102,20 @@ type LineAgent(writeLine,handleLine,logname:string) =
                 else
                     let lines = receivedLines @ newLines
                     let consumerQ = List.rev pendingQueries
-                    let (remainingLines',consumerQ') = handleConsumers lines consumerQ
-                    return! loop remainder' remainingLines' (List.rev consumerQ')
+                    let (remainingLines',remainder'',consumerQ') = handleConsumers lines remainder' consumerQ
+                    return! loop remainder'' remainingLines' (List.rev consumerQ')
 
             | Send line ->
                 do! writeLine line
                 return! loop remainder receivedLines pendingQueries
             | QueryNextLine (line,replyChannel) ->
                 Send line |> mbox.Post // send string
-                return! loop remainder receivedLines ((nextLineReply replyChannel) :: pendingQueries) // reply with next line
+                let replyConsumer = nextLineReply replyChannel
+                return! loop remainder receivedLines ( replyConsumer :: pendingQueries) // reply with next line
             | QueryUntil (query,condition,replyChannel) ->
                 Send query |> mbox.Post
-                return! loop remainder receivedLines ((consumeUntilReply replyChannel condition) :: pendingQueries)
+                let replyConsumer = consumeUntilReply replyChannel condition
+                return! loop remainder receivedLines (replyConsumer :: pendingQueries)
         }
         loop "" [] []
 

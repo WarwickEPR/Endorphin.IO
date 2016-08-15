@@ -1,3 +1,6 @@
+## 0.1.5 - 2016-08-15
+- Handle a prompt without a newline as a response delimiter
+
 ## 0.1.4 - 2016-08-11
 - Add support for command responses terminated with a delimiter such as a prompt
 

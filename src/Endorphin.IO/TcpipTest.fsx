@@ -12,13 +12,15 @@ open System
 
 //log4net.Config.BasicConfigurator.Configure()
 
+// test with nc -l 4000 using the terminal settings "stty -icanon min 1 time 0" for character mode IO
+
 let queryTcpip = async {
     try
         use tcpipInstrument = new TcpipInstrument("Tcpip test",(fun x -> if x.EndsWith "0000" then printfn "Line: %s" x),"localhost",4000)
         tcpipInstrument.Start()
         tcpipInstrument.QueryLine "Hello?" |> printfn "Answered: %s"
         tcpipInstrument.QueryLine "Hello?" |> printfn "Answered 2: %s"
-        tcpipInstrument.QueryUntil (fun x -> x.StartsWith ">") "Again?" |> List.iteri (printfn "Answered %d: %s")
+        tcpipInstrument.QueryUntil (fun x -> x.StartsWith "> ") "Again?" |> List.iteri (printfn "Answered %d: %s")
         let! answer = tcpipInstrument.QueryLineAsync "Hello again?"
         printfn "Answered async: %s" answer
         do! Async.Sleep 1000
