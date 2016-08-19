@@ -6,15 +6,16 @@
 #r "System.dll"
 #r "System.Numerics.dll"
 #r "./bin/Debug/Endorphin.IO.dll"
+#r "./bin/Debug/Endorphin.IO.Reactive.dll"
 
-open Endorphin.IO
+open Endorphin.IO.Reactive
 open System
 
 log4net.Config.BasicConfigurator.Configure()
 
 let queryTcpip = async {
     try
-        use tcpipInstrument = new ObservableTcpipInstrument("Tcpip test","localhost",4000)
+        use tcpipInstrument = new TcpipInstrument("Tcpip test","localhost",4000)
         use __ = tcpipInstrument.Lines() |> Observable.subscribe((printfn "ObsLine: %s"))
         tcpipInstrument.Start()
         Console.ReadLine() |> ignore

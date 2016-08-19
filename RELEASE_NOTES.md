@@ -1,3 +1,6 @@
+## 0.1.6 - 2016-08-19
+- Downgrade Rx 3.x dependency to 2.2.5 repair compatibility with FSharp.Control.Reactive until it is updated
+
 ## 0.1.5 - 2016-08-15
 - Handle a prompt without a newline as a response delimiter
 

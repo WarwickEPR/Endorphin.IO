@@ -10,7 +10,6 @@ type private Message =
 
 type ReplyConsumer = string list -> string -> (string list * string) option
 
-
 /// Agent to serialise writing linemode command and read emitted data into
 /// lines asynchronously. StreamBuffer doesn't
 /// This is useful for devices which don't implement a VISA-style command-response
