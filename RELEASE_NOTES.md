@@ -1,3 +1,7 @@
+## 0.1.8 - 2016-08-22
+- Replace serial port accessor which was removed by mistake
+- Make configuration parameter a requirement (as inheritance complicates optional constructor arguments)
+
 ## 0.1.7 - 2016-08-22
 - Change to provide IO and parsing function by inheritance
 - Replies produced by the parsing function can now be of any type
