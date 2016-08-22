@@ -46,15 +46,14 @@ module Serial =
         serialPort.NewLine <- configuration.LineEnding
         serialPort
         
-    type private Message =
-    | Receive of string
-    | Send of string
-
     /// Agent to serialise writing linemode commands to a serial port and
     /// to read emitted data into lines asynchronously (avoiding some quirks in SerialPort)
     /// This is useful for devices which don't implement a VISA-style command-response
     /// e.g. if commands are not acknowledged but the device may stream line-mode data
-    type SerialInstrument(logname:string, lineHandler, comPort, ?configuration) =
+    [<AbstractClass>]
+    type SerialInstrument<'T>(logname,comPort, ?configuration) =
+        inherit LineAgent<'T>(logname)
+
         let logger = log4net.LogManager.GetLogger logname
         let cts = new CancellationTokenSource()
 
@@ -64,19 +63,18 @@ module Serial =
             logger.Debug <| sprintf "Sending line: %s" msg
             serialPort.WriteLine(msg) }
 
-        // create line agent
-        let lineAgent = new LineAgent( writeLine, lineHandler, logname )
-
         let bufferLen = 2 <<< 13 // 16k
-        let buffer :byte[] = Array.zeroCreate(bufferLen)
+        let buffer : byte[] = Array.zeroCreate(bufferLen)
 
         do
             try
                 serialPort.Open()
             with
             | exn -> failwithf "Failed to open serial port: %A" exn
+        
+        override __.WriteLine line = writeLine line
 
-        member __.StartReading() =
+        member x.StartReading() =
             try
                 let readLoop = async {
                     if not serialPort.IsOpen then
@@ -88,7 +86,7 @@ module Serial =
                             if read > 0 then
                                 let str = System.Text.Encoding.UTF8.GetString buffer.[0..read-1]
                                 logger.Debug <| sprintf "Read %d bytes" read
-                                str |> lineAgent.Receive
+                                str |> x.Receive
                         with
                         // no timeout set at the moment
                         | :? TimeoutException -> do! Async.Sleep 100 }
@@ -97,9 +95,13 @@ module Serial =
             with
             | exn -> failwithf "Failed to start serial port read loop: %A" exn
 
-        interface IDisposable with member __.Dispose() = cts.Cancel(); serialPort.Close()
+        member __.OnFinish() = cts.Cancel(); serialPort.Close()
+        interface System.IDisposable with member x.Dispose() = x.OnFinish()
 
-        member __.WriteLine = lineAgent.WriteLine
-        member __.QueryLine = lineAgent.QueryLine
-        member __.QueryLineAsync = lineAgent.QueryLineAsync
-        member __.SerialPort = serialPort
+type LineSerialInstrument(logname,comPort,configuration) =
+    inherit SerialInstrument<string>(logname,comPort,configuration)
+    override __.ExtractReply(received) = LineAgent.nextLine received
+
+type PromptSerialInstrument(logname,comPort,prompt,configuration) =
+    inherit SerialInstrument<string list>(logname,comPort,configuration)
+    override __.ExtractReply(received) = LineAgent.uptoPrompt prompt received

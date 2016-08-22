@@ -4,20 +4,14 @@ namespace Endorphin.IO.Reactive
 open Endorphin.Core
 open System
 
-type TcpipInstrument(logname,hostname,port) =
+[<AbstractClass>]
+type TcpipInstrument<'T>(logname,hostname,port) =
+    inherit Endorphin.IO.TcpipInstrument<'T>(logname,hostname,port)
     let notifier = new NotificationEvent<string>()
     let notify = Next >> notifier.Trigger
-    let tcpipInstrument = new Endorphin.IO.TcpipInstrument(logname,notify,hostname,port)
-            
+    override __.HandleLine(line) = line |> notify
     member __.Lines() : IObservable<string> = notifier.Publish |> Observable.fromNotificationEvent
     member __.Complete() = Completed |> notifier.Trigger
     member __.Error = Error >> notifier.Trigger
-    member __.Start = tcpipInstrument.Start
-    member __.WriteLine = tcpipInstrument.WriteLine
-    member __.QueryLine = tcpipInstrument.QueryLine
-    member __.QueryLineAsync = tcpipInstrument.QueryLineAsync
 
-
-    interface IDisposable
-        with member x.Dispose() = x.Complete()
-                                  (tcpipInstrument :> IDisposable).Dispose()
+    interface IDisposable with member x.Dispose() = x.Complete(); base.OnFinish()

@@ -19,12 +19,13 @@ let handleLine (line:string) =
 
 let queryTcpip = async {
     try
-        use tcpipInstrument = new LineTcpipInstrument("localhost",4000,"Tcpip test")
+        use tcpipInstrument = new PromptTcpipInstrument("localhost",4000,"> ","Tcpip test")
+              
         tcpipInstrument.Start()
-        tcpipInstrument.Query "Hello?" |> printfn "Answered: %s"
-        tcpipInstrument.Query "Hello?" |> printfn "Answered 2: %s"
+        tcpipInstrument.Query "Hello?" |> List.iter (printfn "Answered: %s")
+        tcpipInstrument.Query "Hello?" |> List.iter (printfn "Answered 2: %s")
         let! answer = tcpipInstrument.QueryAsync "Hello again?"
-        printfn "Answered async: %s" answer
+        answer |> List.iter (printfn "Answered async: %s")
         do! Async.Sleep 1000
         do! tcpipInstrument.WriteLine "Boo!"
         Console.ReadLine() |> ignore
@@ -32,6 +33,5 @@ let queryTcpip = async {
     | exn -> failwithf "Failed: %A" exn }
 Async.RunSynchronously queryTcpip
 
-//        tcpipInstrument.QueryUntil (fun x -> x.StartsWith "> ") "Again?" |> List.iteri (printfn "Answered %d: %s")
 
 

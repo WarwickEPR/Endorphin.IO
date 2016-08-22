@@ -54,10 +54,11 @@
     <Content Include="packages.config" />
     <Compile Include="LineAgent.fs" />
     <Compile Include="Tcpip.fs" />
-    <None Include="TcpipTest.fsx" />
+    <None Include="TcpipTestPrompt.fsx" />
     <Compile Include="Serial.fs" />
     <None Include="SerialTest.fsx" />
     <None Include="LineTest.fsx" />
+    <None Include="TcpipTest.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

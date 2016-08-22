@@ -10,9 +10,12 @@ open System.Threading
 /// into lines asynchronously.
 /// This is useful for devices which don't implement a VISA-style command-response
 /// e.g. if commands are not acknowledged but the device may stream line-mode data
-type TcpipInstrument(logname:string,lineHandler,hostname:string,port,?lineEnding) =
-
+[<AbstractClass>]
+type TcpipInstrument<'T>(logname,hostname:string,port,?lineEnding) as this =
+    inherit LineAgent<'T>(logname)
+    
     let logger = log4net.LogManager.GetLogger logname
+
     let cts = new CancellationTokenSource()
     let lineEnding' = match lineEnding with None -> "\r\n" | Some nl -> nl
 
@@ -27,11 +30,11 @@ type TcpipInstrument(logname:string,lineHandler,hostname:string,port,?lineEnding
         let chunk = System.Text.Encoding.UTF8.GetBytes (line + lineEnding')
         client.GetStream().WriteAsync(chunk,0,chunk.Length) |> Async.AwaitTask
         
-    // create line agent
-    let lineAgent = new LineAgent( (writeLine client), lineHandler, logname )
-
     let bufferLen = 2 <<< 13 // 64k
     let buffer:byte[] = Array.zeroCreate bufferLen
+
+    override __.WriteLine str =
+        writeLine client str
 
     member x.Start() =
         // connect to server
@@ -51,16 +54,19 @@ type TcpipInstrument(logname:string,lineHandler,hostname:string,port,?lineEnding
                         let stringChunk = System.Text.Encoding.UTF8.GetString buffer.[0..read-1]
                         logger.Debug <| sprintf "Read %d bytes" read
                         do! Async.SwitchToThreadPool()
-                        stringChunk |> lineAgent.Receive
+                        stringChunk |> this.Receive
                         do! Async.SwitchToContext ctx
                 with :?TimeoutException -> () }
 
         Async.Start (readLoop,cts.Token)
 
-    interface IDisposable with member __.Dispose() = cts.Cancel(); client.Close()
+    member __.OnFinish() = cts.Cancel(); client.Close()
+    interface System.IDisposable with member x.Dispose() = x.OnFinish()
 
-    member __.WriteLine = lineAgent.WriteLine
-    member __.QueryLine = lineAgent.QueryLine
-    member __.QueryLineAsync = lineAgent.QueryLineAsync
-    member __.QueryUntil = lineAgent.QueryUntil
-    member __.QueryUntilAsync = lineAgent.QueryUntilAsync
+type LineTcpipInstrument(host,port,logname) =
+    inherit TcpipInstrument<string>(host,port,logname)
+    override __.ExtractReply(received) = LineAgent.nextLine received
+
+type PromptTcpipInstrument(host,port,prompt,logname) =
+    inherit TcpipInstrument<string list>(host,port,logname)
+    override __.ExtractReply(received) = LineAgent.uptoPrompt prompt received

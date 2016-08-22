@@ -5,25 +5,15 @@ namespace Endorphin.IO.Reactive
 open System
 open Endorphin.Core
 
-type SerialInstrument(logname,port,?configuration) =
+[<AbstractClass>]
+type SerialInstrument<'T>(logname,port,configuration) =
+    inherit Endorphin.IO.Serial.SerialInstrument<'T>(logname,port,configuration)
+
     let notifier = new NotificationEvent<string>()
     let notify = Next >> notifier.Trigger
-    let serialInstrument =
-        match configuration with
-        | None ->
-            new Endorphin.IO.Serial.SerialInstrument(logname,notify,port)
-        | Some serialConfig -> 
-            new Endorphin.IO.Serial.SerialInstrument(logname,notify,port,serialConfig)
             
     member __.Lines() : IObservable<string> = notifier.Publish |> Observable.fromNotificationEvent
     member __.Complete() = Completed |> notifier.Trigger
     member __.Error = Error >> notifier.Trigger
-    member __.StartReading = serialInstrument.StartReading
-    member __.SerialPort = serialInstrument.SerialPort
-    member __.WriteLine = serialInstrument.WriteLine
-    member __.QueryLine = serialInstrument.QueryLine
-    member __.QueryLineAsync = serialInstrument.QueryLineAsync
 
-    interface IDisposable
-        with member x.Dispose() = x.Complete()
-                                  (serialInstrument :> IDisposable).Dispose()
+    interface IDisposable with member x.Dispose() = x.Complete(); base.OnFinish()
