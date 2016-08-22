@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>ParityMode - Endorphin.IO</title>
+    <title>SerialInstrument<'T> - Endorphin.IO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="University of Warwick EPR and Diamond group"/>
@@ -35,33 +35,57 @@
 
 
 
-<h1>ParityMode</h1>
+<h1>SerialInstrument<'T></h1>
 <p>
-  <span>Namespace: Endorphin.IO</span><br />
-  <span>Parent Module: <a href="endorphin-io-serial.html">Serial</a></span>
+  <span>Namespace: Endorphin.IO.Reactive</span><br />
 </p>
 <div class="xmldoc">
-<p>Serial port parity mode.</p>
-
 </div>
-  <h3>Union Cases</h3>
+  <h3>Constructors</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Union Case</td><td>Description</td></tr>
+      <tr><td>Constructor</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
-            Even
+          <code onmouseout="hideTip(event, '33', 33)" onmouseover="showTip(event, '33', 33)">
+            new(logname, port, configuration)
           </code>
-          <div class="tip" id="3">
-            <strong>Signature:</strong> <br />
+          <div class="tip" id="33">
+            <strong>Signature:</strong> (logname:string * port:string * configuration:SerialConfiguration) -&gt; SerialInstrument&lt;&#39;T&gt;<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/Serial.fs#L22-22" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO.Reactive/ObservableSerial.fs#L9-9" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+              <p>CompiledName: <code>.ctor</code></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Instance members</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Instance member</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
+            Complete()
+          </code>
+          <div class="tip" id="34">
+            <strong>Signature:</strong> unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO.Reactive/ObservableSerial.fs#L16-16" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -71,33 +95,34 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
-            NoParity
+          <code onmouseout="hideTip(event, '35', 35)" onmouseover="showTip(event, '35', 35)">
+            Error
           </code>
-          <div class="tip" id="4">
-            <strong>Signature:</strong> <br />
+          <div class="tip" id="35">
+            <strong>Signature:</strong> exn -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/Serial.fs#L20-20" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO.Reactive/ObservableSerial.fs#L17-17" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           
+              <p>CompiledName: <code>get_Error</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '5', 5)" onmouseover="showTip(event, '5', 5)">
-            Odd
+          <code onmouseout="hideTip(event, '36', 36)" onmouseover="showTip(event, '36', 36)">
+            Lines()
           </code>
-          <div class="tip" id="5">
-            <strong>Signature:</strong> <br />
+          <div class="tip" id="36">
+            <strong>Signature:</strong> unit -&gt; IObservable&lt;string&gt;<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/Serial.fs#L21-21" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO.Reactive/ObservableSerial.fs#L15-15" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

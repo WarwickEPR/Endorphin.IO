@@ -40,76 +40,28 @@
   <span>Namespace: Endorphin.IO</span><br />
 </p>
 <div class="xmldoc">
-<p>Agent to serialise writing linemode command and read emitted data into
-lines asynchronously. StreamBuffer doesn't
-This is useful for devices which don't implement a VISA-style command-response
-e.g. if commands are not acknowledged but the device may stream line-mode data</p>
-
 </div>
-  <h3>Constructors</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Constructor</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '18', 18)" onmouseover="showTip(event, '18', 18)">
-            new(writeLine, handleLine, logname)
+          <code onmouseout="hideTip(event, '1', 1)" onmouseover="showTip(event, '1', 1)">
+            nextLine (arg1, arg2)
           </code>
-          <div class="tip" id="18">
-            <strong>Signature:</strong> (writeLine:(string -&gt; Async&lt;unit&gt;) * handleLine:(string -&gt; unit) * logname:string) -&gt; LineAgent<br />
+          <div class="tip" id="1">
+            <strong>Signature:</strong> (string list * string) -&gt; ReceivedLines * string option<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L17-17" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-              <p>CompiledName: <code>.ctor</code></p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <h3>Instance members</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '19', 19)" onmouseover="showTip(event, '19', 19)">
-            Logger
-          </code>
-          <div class="tip" id="19">
-            <strong>Signature:</strong> ILog<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L130-130" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-              <p>CompiledName: <code>get_Logger</code></p>
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '20', 20)" onmouseover="showTip(event, '20', 20)">
-            QueryLine(line)
-          </code>
-          <div class="tip" id="20">
-            <strong>Signature:</strong> line:string -&gt; string<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L127-127" class="github-link">
+            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L116-116" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -119,65 +71,11 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '21', 21)" onmouseover="showTip(event, '21', 21)">
-            QueryLineAsync(line)
+          <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
+            uptoPrompt prompt (arg2, arg3)
           </code>
-          <div class="tip" id="21">
-            <strong>Signature:</strong> line:string -&gt; Async&lt;string&gt;<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L126-126" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '22', 22)" onmouseover="showTip(event, '22', 22)">
-            QueryUntil(condition query)
-          </code>
-          <div class="tip" id="22">
-            <strong>Signature:</strong> (condition:(string -&gt; bool)) -&gt; query:string -&gt; string list<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L129-129" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '23', 23)" onmouseover="showTip(event, '23', 23)">
-            QueryUntilAsync(condition query)
-          </code>
-          <div class="tip" id="23">
-            <strong>Signature:</strong> (condition:(string -&gt; bool)) -&gt; query:string -&gt; Async&lt;string list&gt;<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L128-128" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '24', 24)" onmouseover="showTip(event, '24', 24)">
-            Receive(a)
-          </code>
-          <div class="tip" id="24">
-            <strong>Signature:</strong> a:string -&gt; unit<br />
+          <div class="tip" id="2">
+            <strong>Signature:</strong> prompt:string -&gt; (string list * string) -&gt; ReceivedLines * string list option<br />
                       </div>
         </td>
         <td class="xmldoc">
@@ -186,27 +84,6 @@ e.g. if commands are not acknowledged but the device may stream line-mode data</
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '25', 25)" onmouseover="showTip(event, '25', 25)">
-            WriteLine
-          </code>
-          <div class="tip" id="25">
-            <strong>Signature:</strong> string -&gt; unit<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/WarwickEPR/Endorphin.IO/tree/master/src/Endorphin.IO/LineAgent.fs#L124-124" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Write a line to the serial port</p>
-
-
-              <p>CompiledName: <code>get_WriteLine</code></p>
         </td>
       </tr>
     </tbody>
