@@ -1,3 +1,7 @@
+## 0.1.7 - 2016-08-22
+- Change to provide IO and parsing function by inheritance
+- Replies produced by the parsing function can now be of any type
+
 ## 0.1.6 - 2016-08-19
 - Downgrade Rx 3.x dependency to 2.2.5 repair compatibility with FSharp.Control.Reactive until it is updated
 
