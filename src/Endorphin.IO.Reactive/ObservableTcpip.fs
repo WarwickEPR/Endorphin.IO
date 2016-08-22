@@ -15,3 +15,11 @@ type TcpipInstrument<'T>(logname,hostname,port) =
     member __.Error = Error >> notifier.Trigger
 
     interface IDisposable with member x.Dispose() = x.Complete(); base.OnFinish()
+
+type LineObservableTcpipInstrument(host,port,logname) =
+    inherit TcpipInstrument<string>(host,port,logname)
+    override __.ExtractReply(received) = Endorphin.IO.LineAgent.nextLine received
+
+type PromptObservableTcpipInstrument(host,port,prompt,logname) =
+    inherit TcpipInstrument<string list>(host,port,logname)
+    override __.ExtractReply(received) = Endorphin.IO.LineAgent.uptoPrompt prompt received

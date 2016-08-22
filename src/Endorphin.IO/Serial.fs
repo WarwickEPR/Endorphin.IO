@@ -29,14 +29,12 @@ module Serial =
         Parity      : Parity
         LineEnding  : string }
 
-    let private defaultSerialConfiguration = {
+    let DefaultSerialConfiguration = {
         BaudRate   = 115200
         DataBits   = 8
         StopBits   = StopBits.One
         Parity     = Parity.None
         LineEnding = "\r\n" }
-
-    let private configurationOrDefault = function Some c -> c | None -> defaultSerialConfiguration
 
     let private createSerialPort comPort configuration =
         let serialPort = new SerialPort(comPort, configuration.BaudRate,
@@ -51,13 +49,13 @@ module Serial =
     /// This is useful for devices which don't implement a VISA-style command-response
     /// e.g. if commands are not acknowledged but the device may stream line-mode data
     [<AbstractClass>]
-    type SerialInstrument<'T>(logname,comPort, ?configuration) =
+    type SerialInstrument<'T>(logname,comPort, configuration) =
         inherit LineAgent<'T>(logname)
 
         let logger = log4net.LogManager.GetLogger logname
         let cts = new CancellationTokenSource()
 
-        let serialPort = createSerialPort comPort (configurationOrDefault configuration)
+        let serialPort = createSerialPort comPort configuration
 
         let writeLine msg = async {
             logger.Debug <| sprintf "Sending line: %s" msg
@@ -94,6 +92,8 @@ module Serial =
 
             with
             | exn -> failwithf "Failed to start serial port read loop: %A" exn
+
+        member __.Serial = serialPort
 
         member __.OnFinish() = cts.Cancel(); serialPort.Close()
         interface System.IDisposable with member x.Dispose() = x.OnFinish()

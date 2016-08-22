@@ -6,19 +6,20 @@
 #r "System.dll"
 #r "System.Numerics.dll"
 #r "./bin/Debug/Endorphin.IO.dll"
+#r "./bin/Debug/Endorphin.IO.Reactive.dll"
 
-open Endorphin.IO
+open Endorphin.IO.Reactive
 open System
 
 log4net.Config.BasicConfigurator.Configure()
 
 let querySerial = async {
     try
-        use serialInstrument = new ObservableSerialInstrument("Serial test","COM4")
+        use serialInstrument = new LineObservableSerialInstrument("Serial test","COM4",Endorphin.IO.Serial.DefaultSerialConfiguration)
         use __ = serialInstrument.Lines() |> Observable.subscribe((printfn "ObsLine: %s"))
-        serialInstrument.Start()
-        serialInstrument.WriteLine("HIDE DATA")
-        serialInstrument.WriteLine("?")
+        serialInstrument.StartReading()
+        serialInstrument.Send("HIDE DATA")
+        serialInstrument.Send("?")
         Console.ReadLine() |> ignore
 
     with

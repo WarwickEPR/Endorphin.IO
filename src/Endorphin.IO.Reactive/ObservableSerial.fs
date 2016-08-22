@@ -17,3 +17,11 @@ type SerialInstrument<'T>(logname,port,configuration) =
     member __.Error = Error >> notifier.Trigger
 
     interface IDisposable with member x.Dispose() = x.Complete(); base.OnFinish()
+
+type LineObservableSerialInstrument(logname,comPort,configuration) =
+    inherit SerialInstrument<string>(logname,comPort,configuration)
+    override __.ExtractReply(received) = Endorphin.IO.LineAgent.nextLine received
+
+type PromptObservableSerialInstrument(logname,comPort,prompt,configuration) =
+    inherit SerialInstrument<string list>(logname,comPort,configuration)
+    override __.ExtractReply(received) = Endorphin.IO.LineAgent.uptoPrompt prompt received

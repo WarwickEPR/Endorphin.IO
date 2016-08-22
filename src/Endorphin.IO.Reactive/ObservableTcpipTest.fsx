@@ -15,7 +15,7 @@ log4net.Config.BasicConfigurator.Configure()
 
 let queryTcpip = async {
     try
-        use tcpipInstrument = new TcpipInstrument("Tcpip test","localhost",4000)
+        use tcpipInstrument = new LineObservableTcpipInstrument("Tcpip test","localhost",4000)
         use __ = tcpipInstrument.Lines() |> Observable.subscribe((printfn "ObsLine: %s"))
         tcpipInstrument.Start()
         Console.ReadLine() |> ignore

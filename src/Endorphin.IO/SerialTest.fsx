@@ -14,8 +14,8 @@ log4net.Config.BasicConfigurator.Configure()
 
 let querySerial = async {
     try
-        use serialInstrument = new SerialInstrument("Serial test",(printfn "Line: %s"),"COM4")
-        serialInstrument.Start()
+        use serialInstrument = new LineSerialInstrument("Serial test","COM4",DefaultSerialConfiguration)
+        serialInstrument.StartReading()
         serialInstrument.WriteLine("HIDE DATA")
         serialInstrument.WriteLine("?")
         Console.ReadLine() |> ignore
