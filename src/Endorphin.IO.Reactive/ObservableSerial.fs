@@ -11,12 +11,14 @@ type SerialInstrument<'T>(logname,port,configuration) =
 
     let notifier = new NotificationEvent<string>()
     let notify = Next >> notifier.Trigger
+    override __.HandleLine line = notify line
             
     member __.Lines() : IObservable<string> = notifier.Publish |> Observable.fromNotificationEvent
     member __.Complete() = Completed |> notifier.Trigger
     member __.Error = Error >> notifier.Trigger
 
     interface IDisposable with member x.Dispose() = x.Complete(); base.OnFinish()
+
 
 type LineObservableSerialInstrument(logname,comPort,configuration) =
     inherit SerialInstrument<string>(logname,comPort,configuration)
