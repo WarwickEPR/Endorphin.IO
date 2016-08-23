@@ -1,3 +1,6 @@
+## 0.1.10 - 2016-08-24
+- Fix the observable serial line client
+
 ## 0.1.9 - 2016-08-23
 - Fix an argument transposition on TCPIP connection constructors
 
