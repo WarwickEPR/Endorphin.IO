@@ -16,10 +16,10 @@ type TcpipInstrument<'T>(logname,hostname,port) =
 
     interface IDisposable with member x.Dispose() = x.Complete(); base.OnFinish()
 
-type LineObservableTcpipInstrument(host,port,logname) =
-    inherit TcpipInstrument<string>(host,port,logname)
+type LineObservableTcpipInstrument(logname,host,port) =
+    inherit TcpipInstrument<string>(logname,host,port)
     override __.ExtractReply(received) = Endorphin.IO.LineAgent.nextLine received
 
-type PromptObservableTcpipInstrument(host,port,prompt,logname) =
-    inherit TcpipInstrument<string list>(host,port,logname)
+type PromptObservableTcpipInstrument(logname,prompt,host,port) =
+    inherit TcpipInstrument<string list>(logname,host,port)
     override __.ExtractReply(received) = Endorphin.IO.LineAgent.uptoPrompt prompt received

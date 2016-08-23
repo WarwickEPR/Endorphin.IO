@@ -1,3 +1,6 @@
+## 0.1.9 - 2016-08-23
+- Fix an argument transposition on TCPIP connection constructors
+
 ## 0.1.8 - 2016-08-22
 - Replace serial port accessor which was removed by mistake
 - Make configuration parameter a requirement (as inheritance complicates optional constructor arguments)

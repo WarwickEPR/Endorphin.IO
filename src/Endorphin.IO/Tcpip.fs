@@ -63,10 +63,10 @@ type TcpipInstrument<'T>(logname,hostname:string,port,?lineEnding) as this =
     member __.OnFinish() = cts.Cancel(); client.Close()
     interface System.IDisposable with member x.Dispose() = x.OnFinish()
 
-type LineTcpipInstrument(host,port,logname) =
-    inherit TcpipInstrument<string>(host,port,logname)
+type LineTcpipInstrument(logname,host,port) =
+    inherit TcpipInstrument<string>(logname,host,port)
     override __.ExtractReply(received) = LineAgent.nextLine received
 
-type PromptTcpipInstrument(host,port,prompt,logname) =
-    inherit TcpipInstrument<string list>(host,port,logname)
+type PromptTcpipInstrument(logname,prompt,host,port) =
+    inherit TcpipInstrument<string list>(logname,host,port)
     override __.ExtractReply(received) = LineAgent.uptoPrompt prompt received
