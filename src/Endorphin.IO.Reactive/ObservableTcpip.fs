@@ -14,7 +14,8 @@ type TcpipInstrument<'T>(logname,hostname,port) =
     member __.Complete() = Completed |> notifier.Trigger
     member __.Error = Error >> notifier.Trigger
 
-    interface IDisposable with member x.Dispose() = x.Complete(); base.OnFinish()
+    member x.OnFinish() = x.Complete(); base.OnFinish()
+    interface IDisposable with member x.Dispose() = x.OnFinish()
 
 type LineObservableTcpipInstrument(logname,host,port) =
     inherit TcpipInstrument<string>(logname,host,port)

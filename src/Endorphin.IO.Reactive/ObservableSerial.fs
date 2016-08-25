@@ -17,7 +17,8 @@ type SerialInstrument<'T>(logname,port,configuration) =
     member __.Complete() = Completed |> notifier.Trigger
     member __.Error = Error >> notifier.Trigger
 
-    interface IDisposable with member x.Dispose() = x.Complete(); base.OnFinish()
+    member x.OnFinish() = x.Complete(); base.OnFinish()
+    interface IDisposable with member x.Dispose() = x.OnFinish()
 
 
 type LineObservableSerialInstrument(logname,comPort,configuration) =

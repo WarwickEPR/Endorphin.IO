@@ -39,6 +39,7 @@ type TcpipInstrument<'T>(logname,hostname:string,port,?lineEnding) as this =
     member x.Start() =
         // connect to server
         client.Connect(hostname,port)
+        logger.Info <| sprintf "Opened TCP/IP connection to %s:%d" hostname port
 
         // start pumping data
         let rec readLoop = async {
@@ -57,10 +58,9 @@ type TcpipInstrument<'T>(logname,hostname:string,port,?lineEnding) as this =
                         stringChunk |> this.Receive
                         do! Async.SwitchToContext ctx
                 with :?TimeoutException -> () }
-
         Async.Start (readLoop,cts.Token)
 
-    member __.OnFinish() = cts.Cancel(); client.Close()
+    member __.OnFinish() = cts.Cancel(); client.Close(); logger.Info <| sprintf "Closed TCP/IP connection to %s:%d" hostname port
     interface System.IDisposable with member x.Dispose() = x.OnFinish()
 
 type LineTcpipInstrument(logname,host,port) =

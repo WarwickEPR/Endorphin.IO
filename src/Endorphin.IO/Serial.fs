@@ -67,6 +67,7 @@ module Serial =
         do
             try
                 serialPort.Open()
+                logger.Info <| sprintf "Opened serial port %s" comPort
             with
             | exn -> failwithf "Failed to open serial port: %A" exn
         
@@ -95,7 +96,11 @@ module Serial =
 
         member __.Serial = serialPort
 
-        member __.OnFinish() = cts.Cancel(); serialPort.Close()
+        member __.OnFinish() =
+            cts.Cancel()
+            serialPort.Close()
+            logger.Info <| sprintf "Closed serial port %s" comPort
+
         interface System.IDisposable with member x.Dispose() = x.OnFinish()
 
 type LineSerialInstrument(logname,comPort,configuration) =
