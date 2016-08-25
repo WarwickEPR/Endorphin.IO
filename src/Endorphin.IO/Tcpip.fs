@@ -53,7 +53,7 @@ type TcpipInstrument<'T>(logname,hostname:string,port,?lineEnding) as this =
                     let! read = client.GetStream().AsyncRead(buffer,0,bufferLen)
                     if read > 0 then
                         let stringChunk = System.Text.Encoding.UTF8.GetString buffer.[0..read-1]
-                        logger.Debug <| sprintf "Read %d bytes" read
+//                        logger.Debug <| sprintf "Read %d bytes" read
                         do! Async.SwitchToThreadPool()
                         stringChunk |> this.Receive
                         do! Async.SwitchToContext ctx

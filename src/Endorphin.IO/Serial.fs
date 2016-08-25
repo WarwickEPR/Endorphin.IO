@@ -84,7 +84,7 @@ module Serial =
                             let! read = serialPort.BaseStream.ReadAsync(buffer,0,bufferLen) |> Async.AwaitTask
                             if read > 0 then
                                 let str = System.Text.Encoding.UTF8.GetString buffer.[0..read-1]
-                                logger.Debug <| sprintf "Read %d bytes" read
+//                                logger.Debug <| sprintf "Read %d bytes" read
                                 str |> x.Receive
                         with
                         // no timeout set at the moment
