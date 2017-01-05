@@ -1,4 +1,4 @@
-## 0.2.0 - 2017-01-05
+## 0.2.1 - 2017-01-05
 - performance improvements including a breaking change to emit lines in batches
 
 ## 0.1.10 - 2016-08-24
