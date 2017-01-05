@@ -52,7 +52,6 @@ type LineAgent<'T>(logname:string) as this =
 
     let messageHandler (mbox:MailboxProcessor<Message<'T>>) =
         let rec loop (received : ReceivedLines) (repliesExpected : ('T -> unit) list ) = async {
-            do! Async.SwitchToThreadPool()
             let! msg = mbox.Receive()
             match msg with
             | Receive newData ->
@@ -64,7 +63,7 @@ type LineAgent<'T>(logname:string) as this =
                 let (newLines,remainder) = extractLines (snd received + newData)
                 let received' = updateReceived received newLines remainder
                 newLines |> List.iter (sprintf "Received line: %s" >> logger.Debug)
-                newLines |> List.iter this.HandleLine
+                newLines |> List.toArray |> this.HandleLines
 
                 let rec handleQueryReplies received (pending : ('T -> unit) list) =
                     match pending with
@@ -95,13 +94,19 @@ type LineAgent<'T>(logname:string) as this =
                 let reply = replyChannel.Reply
                 return! loop received (reply :: repliesExpected)
         }
-        loop ([],"") []
+        async {
+            do! Async.SwitchToNewThread()
+            logger.Debug <| sprintf "Starting on new thread %A" System.Threading.SynchronizationContext.Current
+            return! loop ([],"") [] }
+
+    let onNewThread a = async { do! Async.SwitchToNewThread()
+                                return! a }
 
     let agent = MailboxProcessor.Start messageHandler
 
     abstract member WriteLine : string -> Async<unit>
-    abstract member HandleLine : string -> unit
-    default __.HandleLine(_) = ()
+    abstract member HandleLines : string[] -> unit
+    default __.HandleLines(_) = ()
     abstract member ExtractReply : ReceivedLines -> ReceivedLines * 'T option
 
     /// Write a line to the serial port

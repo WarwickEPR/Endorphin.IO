@@ -9,11 +9,11 @@ open Endorphin.Core
 type SerialInstrument<'T>(logname,port,configuration) =
     inherit Endorphin.IO.Serial.SerialInstrument<'T>(logname,port,configuration)
 
-    let notifier = new NotificationEvent<string>()
+    let notifier = new NotificationEvent<string[]>()
     let notify = Next >> notifier.Trigger
-    override __.HandleLine line = notify line
+    override __.HandleLines lines = notify lines
             
-    member __.Lines() : IObservable<string> = notifier.Publish |> Observable.fromNotificationEvent
+    member __.Lines() : IObservable<string[]> = notifier.Publish |> Observable.fromNotificationEvent
     member __.Complete() = Completed |> notifier.Trigger
     member __.Error = Error >> notifier.Trigger
 

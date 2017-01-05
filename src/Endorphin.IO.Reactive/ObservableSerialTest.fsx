@@ -5,23 +5,31 @@
 #r "System.Core.dll"
 #r "System.dll"
 #r "System.Numerics.dll"
+#r "../../packages/Rx-Interfaces/lib/net45/System.Reactive.Interfaces.dll"
+#r "../../packages/Rx-Core/lib/net45/System.Reactive.Core.dll"
+#r "../../packages/Rx-PlatformServices/lib/net45/System.Reactive.PlatformServices.dll"
 #r "./bin/Debug/Endorphin.IO.dll"
 #r "./bin/Debug/Endorphin.IO.Reactive.dll"
+#r "../../packages/FSharp.Control.Reactive/lib/net45/FSharp.Control.Reactive.dll"
 
 open Endorphin.IO.Reactive
 open System
+open FSharp.Control.Reactive
 
 log4net.Config.BasicConfigurator.Configure()
 
 let querySerial = async {
+    do! Async.SwitchToNewThread()
     try
         use serialInstrument = new LineObservableSerialInstrument("Serial test","COM4",Endorphin.IO.Serial.DefaultSerialConfiguration)
-        use __ = serialInstrument.Lines() |> Observable.subscribe((printfn "ObsLine: %s"))
+        use __ = serialInstrument.Lines()
+//               |> Observable.subscribeOn Reactive.Concurrency.ThreadPoolScheduler.Instance
+                 |> Observable.subscribe (Array.iter (printfn "ObsLine: %s"))
         serialInstrument.StartReading()
         serialInstrument.Send("HIDE DATA")
-        serialInstrument.Send("?")
-        Console.ReadLine() |> ignore
-
+        serialInstrument.Send("TB 10ms")
+        serialInstrument.Send("SHOW RATE")
+        Console.ReadLine() |> ignore 
     with
     | exn -> failwithf "Failed: %A" exn }
 Async.RunSynchronously querySerial

@@ -3,14 +3,15 @@ namespace Endorphin.IO.Reactive
 
 open Endorphin.Core
 open System
+open FSharp.Control.Reactive
 
 [<AbstractClass>]
 type TcpipInstrument<'T>(logname,hostname,port) =
     inherit Endorphin.IO.TcpipInstrument<'T>(logname,hostname,port)
-    let notifier = new NotificationEvent<string>()
+    let notifier = new NotificationEvent<string[]>()
     let notify = Next >> notifier.Trigger
-    override __.HandleLine line = line |> notify
-    member __.Lines() : IObservable<string> = notifier.Publish |> Observable.fromNotificationEvent
+    override __.HandleLines lines = lines |> notify
+    member __.Lines() : IObservable<string[]> = notifier.Publish |> Observable.fromNotificationEvent |> Observable.observeOn System.Reactive.Concurrency.NewThreadScheduler.Default
     member __.Complete() = Completed |> notifier.Trigger
     member __.Error = Error >> notifier.Trigger
 
