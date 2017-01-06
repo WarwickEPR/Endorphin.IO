@@ -1,3 +1,6 @@
+## 0.2.1 - 2017-01-06
+- Remove pin on Rx dependency. Update to Reactive Extensions 3.x
+
 ## 0.2.0 - 2017-01-05
 - performance improvements including a breaking change to emit lines in batches
 

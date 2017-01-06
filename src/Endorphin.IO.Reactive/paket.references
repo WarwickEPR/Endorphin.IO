@@ -2,5 +2,4 @@ FSharp.Core
 Endorphin.Core
 log4net
 FSharp.Control.Reactive
-Rx-PlatformServices
 File:Endorphin.Core.Reactive.fs
