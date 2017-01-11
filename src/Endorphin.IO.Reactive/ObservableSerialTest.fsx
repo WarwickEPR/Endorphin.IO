@@ -22,7 +22,7 @@ log4net.Config.BasicConfigurator.Configure()
 let querySerial = async {
     do! Async.SwitchToNewThread()
     try
-        use serialInstrument = new LineObservableSerialInstrument("Serial test","COM4",Endorphin.IO.Serial.DefaultSerialConfiguration)
+        use serialInstrument = new LineObservableSerialInstrument("Serial test","COM4",Endorphin.IO.Serial.DefaultSerialConfiguration,null)
         use __ = serialInstrument.Lines()
 //               |> Observable.subscribeOn Reactive.Concurrency.ThreadPoolScheduler.Instance
                  |> Observable.subscribe (Array.iter (printfn "ObsLine: %s"))

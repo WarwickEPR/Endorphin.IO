@@ -61,11 +61,12 @@ module Serial =
             logger.Debug <| sprintf "Sending line: %s" msg
             serialPort.WriteLine(msg) }
 
-        let bufferLen = 2 <<< 13 // 16k
+        let bufferLen = 2 <<< 15 // 64k
         let buffer : byte[] = Array.zeroCreate(bufferLen)
 
         do
             try
+                serialPort.ReadBufferSize <- 2 <<< 16
                 serialPort.Open()
                 logger.Info <| sprintf "Opened serial port %s" comPort
             with
@@ -81,14 +82,16 @@ module Serial =
                     do! Async.SwitchToNewThread()
                     while serialPort.IsOpen do
                         try
-                            let! read = serialPort.BaseStream.ReadAsync(buffer,0,bufferLen) |> Async.AwaitTask
-                            if read > 0 then
-                                let str = System.Text.Encoding.UTF8.GetString buffer.[0..read-1]
-//                                logger.Debug <| sprintf "Read %d bytes" read
-                                str |> x.Receive
+                            if serialPort.BytesToRead > 0 then
+                                let read = serialPort.Read(buffer,0,bufferLen)
+                                if read > 0 then
+                                    let str = System.Text.Encoding.UTF8.GetString buffer.[0..read-1]
+//                                    logger.Debug <| sprintf "Read %d bytes" read
+                                    str |> x.Receive
+                            do! Async.Sleep 50
                         with
                         // no timeout set at the moment
-                        | :? TimeoutException -> do! Async.Sleep 100 }
+                        | :? TimeoutException -> do! Async.Sleep 200 }
                 Async.Start (readLoop,cts.Token)
 
             with
@@ -108,5 +111,5 @@ type LineSerialInstrument(logname,comPort,configuration) =
     override __.ExtractReply(received) = LineAgent.nextLine received
 
 type PromptSerialInstrument(logname,comPort,prompt,configuration) =
-    inherit SerialInstrument<string list>(logname,comPort,configuration)
+    inherit SerialInstrument<string[]>(logname,comPort,configuration)
     override __.ExtractReply(received) = LineAgent.uptoPrompt prompt received

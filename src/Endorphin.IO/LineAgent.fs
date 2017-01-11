@@ -2,14 +2,15 @@
 
 namespace Endorphin.IO
 
-type ReceivedLines = string list * string  // lines so far, plus any incomplete line
+open System
+
+type ReceivedLines = string[] * string  // lines so far, plus any incomplete line
 type ExtractReply<'T> = ReceivedLines -> ReceivedLines * 'T option
 
 type private Message<'T> =
 | Receive of string
 | Send of string
 | Query of query: string * AsyncReplyChannel<'T>
-
 
 /// Agent to serialise writing linemode command and read emitted data into
 /// lines asynchronously. StreamBuffer doesn't
@@ -19,33 +20,8 @@ type private Message<'T> =
 type LineAgent<'T>(logname:string) as this =
     let logger = log4net.LogManager.GetLogger logname
 
-    let extractLine (data:string) =
-        match data.IndexOfAny([| '\r'; '\n' |]) with
-        | -1 ->
-            (None,data)
-        | i ->
-            let line = data.[0..i-1]
-            let remainder =
-                if data.Length <= i+1 then
-                    "" // 
-                else
-                    if data.Chars(i+1) = '\n' then
-                        data.Substring (i+2)
-                    else
-                        data.Substring (i+1)
-            (Some line,remainder)
-        
-    let extractLines data =
-        let rec extractLines' lines (data:string) =
-            let line, remainder' = extractLine data
-            match line with
-            | None -> (lines,remainder')
-            | Some line ->
-                match remainder' with
-                | "" -> (line :: lines,"")
-                | _  -> extractLines' (line :: lines) remainder'
-        let lines, remainder = extractLines' [] data
-        (List.rev lines, remainder)
+    let extractLines (data:string) =
+        data.Split([|'\r';'\n'|],StringSplitOptions.RemoveEmptyEntries)
 
     let updateReceived (receivedLines,_) newLines remainder =
         (receivedLines @ newLines,remainder)
@@ -60,15 +36,26 @@ type LineAgent<'T>(logname:string) as this =
                 // emit any completed lines.
                 // Keep incomplete line fragment to combine with the next block
                     
-                let (newLines,remainder) = extractLines (snd received + newData)
-                let received' = updateReceived received newLines remainder
-                newLines |> List.iter (sprintf "Received line: %s" >> logger.Debug)
-                newLines |> List.toArray |> this.HandleLines
+                let receivedLines = fst received
+                let remainder = snd received
+                let lines = extractLines (remainder + newData)
+                let (newLines,remainder) =
+                    let last = newData.Chars (newData.Length-1)
+                    if last = '\n' || last = '\r' then
+                        (lines,"")
+                    else
+                        let remainder' = Array.last lines
+                        let newLines = Array.sub lines 0 (lines.Length-1)
+                        (newLines,remainder)
+                let receivedLines' = Array.concat [receivedLines; newLines]
+                let received' = (receivedLines',remainder)
+
+                newLines |> this.HandleLines
 
                 let rec handleQueryReplies received (pending : ('T -> unit) list) =
                     match pending with
                     | next :: rest ->
-                        let (received',reply) = this.ExtractReply received
+                        let (received',reply) = this.ExtractReply received'
                         match reply with
                         | Some reply -> // Satisfied this one, try to satisfy the rest with the remaining lines
                             reply |> next
@@ -89,18 +76,17 @@ type LineAgent<'T>(logname:string) as this =
             | Send line ->
                 do! this.WriteLine line
                 return! loop received repliesExpected
+
             | Query (query,replyChannel) ->
                 Send query |> mbox.Post
                 let reply = replyChannel.Reply
                 return! loop received (reply :: repliesExpected)
+
         }
         async {
             do! Async.SwitchToNewThread()
             logger.Debug <| sprintf "Starting on new thread %A" System.Threading.SynchronizationContext.Current
-            return! loop ([],"") [] }
-
-    let onNewThread a = async { do! Async.SwitchToNewThread()
-                                return! a }
+            return! loop ([||],"") [] }
 
     let agent = MailboxProcessor.Start messageHandler
 
@@ -120,25 +106,22 @@ module LineAgent =
 
     let nextLine (received:ReceivedLines) =
         let (lines,remainder) = received
-        match lines with
-        | nextLine :: rest ->
-            let received' : ReceivedLines = (rest,remainder)
-            (received',Some nextLine)
-        | [] ->
+        if lines.Length > 0 then
+            let received' = (Array.sub lines 1 (lines.Length-1),remainder)
+            (received',Some lines.[0])
+        else
             (received,None)
 
     let uptoPrompt (prompt:string) (received:ReceivedLines) =
         let (lines,remainder) = received
         let condition (line:string) = line.StartsWith prompt
-        match List.tryFindIndex condition lines with
+        match Array.tryFindIndex condition lines with
         | None ->
             if condition remainder then
-                ((([],""):ReceivedLines),Some lines)
+                ((([||],""):ReceivedLines),Some lines)
             else
                 (received,None)
         | Some i ->
-            let (reply,rest) = List.splitAt i lines
-            let received' : ReceivedLines = (rest.Tail,remainder)
+            let (reply,rest) = Array.splitAt i lines
+            let received' : ReceivedLines = (Array.sub rest 1 (Array.length rest - 1),remainder)
             (received',Some reply)
-
-

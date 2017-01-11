@@ -68,5 +68,5 @@ type LineTcpipInstrument(logname,host,port) =
     override __.ExtractReply(received) = LineAgent.nextLine received
 
 type PromptTcpipInstrument(logname,prompt,host,port) =
-    inherit TcpipInstrument<string list>(logname,host,port)
+    inherit TcpipInstrument<string[]>(logname,host,port)
     override __.ExtractReply(received) = LineAgent.uptoPrompt prompt received
