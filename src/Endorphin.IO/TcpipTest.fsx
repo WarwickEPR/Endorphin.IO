@@ -19,7 +19,7 @@ let handleLine (line:string) =
 
 let queryTcpip = async {
     try
-        use tcpipInstrument = new LineTcpipInstrument("localhost",4000,"Tcpip test")
+        use tcpipInstrument = new LineTcpipInstrument("Tcpip test","localhost",4000)
         tcpipInstrument.Start()
         tcpipInstrument.Query "Hello?" |> printfn "Answered: %s"
         tcpipInstrument.Query "Hello?" |> printfn "Answered 2: %s"

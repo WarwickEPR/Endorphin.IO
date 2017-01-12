@@ -46,17 +46,17 @@ type TcpipInstrument<'T>(logname,hostname:string,port,?lineEnding) as this =
             // Assume the client is connected until after a read
             // "Connected" only gives the state of the most recent connection
             do! Async.SwitchToNewThread()
-            let ctx = Threading.SynchronizationContext.Current
+//            let ctx = Threading.SynchronizationContext.Current
             while not cts.IsCancellationRequested do
                 // This version of AsyncRead returns whilst the other blocks
                 try
-                    let! read = client.GetStream().AsyncRead(buffer,0,bufferLen)
+                    let read = client.GetStream().Read(buffer,0,bufferLen)
                     if read > 0 then
                         let stringChunk = System.Text.Encoding.UTF8.GetString buffer.[0..read-1]
 //                        logger.Debug <| sprintf "Read %d bytes" read
-                        do! Async.SwitchToThreadPool()
+//                        do! Async.SwitchToThreadPool()
                         stringChunk |> this.Receive
-                        do! Async.SwitchToContext ctx
+//                        do! Async.SwitchToContext ctx
                 with :?TimeoutException -> () }
         Async.Start (readLoop,cts.Token)
 

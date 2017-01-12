@@ -21,6 +21,9 @@ type LineAgent<'T>(logname:string) as this =
     let logger = log4net.LogManager.GetLogger logname
 
     let extractLines (data:string) =
+        // The remove empty lines option might be a problem
+        // Not all sources have consistent line endings, but it might be
+        // worth switching to split on \n and strip \r instead
         data.Split([|'\r';'\n'|],StringSplitOptions.RemoveEmptyEntries)
 
     let updateReceived (receivedLines,_) newLines remainder =
