@@ -1,3 +1,8 @@
+## 0.2.3 - 2017-01-12
+- Use only synchronous read in the serial and TCP/IP read loops
+- Change to using arrays to buffer lines
+- Significant performance improvements
+
 ## 0.2.2 - 2017-01-06
 - Remove pin on Rx dependency. Update to Reactive Extensions 3.x
 
