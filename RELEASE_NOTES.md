@@ -1,5 +1,6 @@
 ## 0.2.4 - 2017-02-23
 - Add WriteBytes
+- Handle IO exceptions - logging for now, not propagating
 
 ## 0.2.3 - 2017-01-12
 - Use only synchronous read in the serial and TCP/IP read loops

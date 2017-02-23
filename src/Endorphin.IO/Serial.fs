@@ -59,11 +59,17 @@ module Serial =
 
         let writeLine msg = async {
             logger.Debug <| sprintf "Sending line: %s" msg
-            serialPort.WriteLine(msg) }
+            try
+                serialPort.WriteLine(msg)
+            with
+            | exn -> exn.ToString() |> sprintf "Unhandled write exception on writing line %s" |> logger.Error }
 
         let writeBytes (bytes:byte[]) = async {
             logger.Debug <| sprintf "Sending %d bytes" bytes.Length
-            serialPort.Write(bytes,0,bytes.Length) }
+            try
+                serialPort.Write(bytes,0,bytes.Length)
+            with
+            | exn -> exn.ToString() |> sprintf "Unhandled write exception on writing bytes %s" |> logger.Error }
 
         let bufferLen = 2 <<< 15 // 64k
         let buffer : byte[] = Array.zeroCreate(bufferLen)
@@ -74,7 +80,8 @@ module Serial =
                 serialPort.Open()
                 logger.Info <| sprintf "Opened serial port %s" comPort
             with
-            | exn -> failwithf "Failed to open serial port: %A" exn
+            | exn -> exn.ToString() |> sprintf "Failed to open serial port %s" |> logger.Error
+                     failwithf "Failed to open serial port: %A" exn
         
         override __.WriteLine line = writeLine line
         override __.WriteBytes bytes = writeBytes bytes
@@ -96,7 +103,8 @@ module Serial =
                             do! Async.Sleep 50
                         with
                         // no timeout set at the moment
-                        | :? TimeoutException -> do! Async.Sleep 200 }
+                        | :? TimeoutException -> do! Async.Sleep 200
+                        | exn -> exn.ToString() |> sprintf "Read exception: %s" |> logger.Error }
                 Async.Start (readLoop,cts.Token)
 
             with

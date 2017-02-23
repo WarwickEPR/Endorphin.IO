@@ -27,12 +27,18 @@ type TcpipInstrument<'T>(logname,hostname:string,port,?lineEnding) as this =
 
     let writeLine (client:TcpClient) line = async {
         logger.Debug <| sprintf "Sending line: %s" line
-        let chunk = System.Text.Encoding.UTF8.GetBytes (line + lineEnding')
-        client.GetStream().Write(chunk,0,chunk.Length) }
+        try
+            let chunk = System.Text.Encoding.UTF8.GetBytes (line + lineEnding')
+            client.GetStream().Write(chunk,0,chunk.Length)
+        with
+        | exn -> exn.ToString() |> sprintf "Unhandled write exception: %s" |> logger.Error }
 
     let writeBytes (client:TcpClient) (bytes:byte[]) = async {
         logger.Debug <| sprintf "Sending %d bytes" bytes.Length
-        client.GetStream().Write(bytes,0,bytes.Length) }
+        try
+            client.GetStream().Write(bytes,0,bytes.Length)
+        with
+        | exn -> exn.ToString() |> sprintf "Unhandled (byte) write exception: %s" |> logger.Error }
         
     let bufferLen = 2 <<< 13 // 64k
     let buffer:byte[] = Array.zeroCreate bufferLen
@@ -61,7 +67,9 @@ type TcpipInstrument<'T>(logname,hostname:string,port,?lineEnding) as this =
 //                        do! Async.SwitchToThreadPool()
                         stringChunk |> this.Receive
 //                        do! Async.SwitchToContext ctx
-                with :?TimeoutException -> () }
+                with
+                | :?TimeoutException -> ()
+                | exn -> exn.ToString() |> sprintf "Read exception: %s" |> logger.Error }
         Async.Start (readLoop,cts.Token)
 
     member __.OnFinish() = cts.Cancel(); client.Close(); logger.Info <| sprintf "Closed TCP/IP connection to %s:%d" hostname port
