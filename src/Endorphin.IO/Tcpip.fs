@@ -25,16 +25,20 @@ type TcpipInstrument<'T>(logname,hostname:string,port,?lineEnding) as this =
         client.NoDelay <- true
         client
 
-    let writeLine (client:TcpClient) line =
+    let writeLine (client:TcpClient) line = async {
         logger.Debug <| sprintf "Sending line: %s" line
         let chunk = System.Text.Encoding.UTF8.GetBytes (line + lineEnding')
-        client.GetStream().WriteAsync(chunk,0,chunk.Length) |> Async.AwaitTask
+        client.GetStream().Write(chunk,0,chunk.Length) }
+
+    let writeBytes (client:TcpClient) (bytes:byte[]) = async {
+        logger.Debug <| sprintf "Sending %d bytes" bytes.Length
+        client.GetStream().Write(bytes,0,bytes.Length) }
         
     let bufferLen = 2 <<< 13 // 64k
     let buffer:byte[] = Array.zeroCreate bufferLen
 
-    override __.WriteLine str =
-        writeLine client str
+    override __.WriteLine str = writeLine client str
+    override __.WriteBytes bytes = writeBytes client bytes
 
     member x.Start() =
         // connect to server

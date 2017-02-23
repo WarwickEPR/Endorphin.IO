@@ -61,6 +61,10 @@ module Serial =
             logger.Debug <| sprintf "Sending line: %s" msg
             serialPort.WriteLine(msg) }
 
+        let writeBytes (bytes:byte[]) = async {
+            logger.Debug <| sprintf "Sending %d bytes" bytes.Length
+            serialPort.Write(bytes,0,bytes.Length) }
+
         let bufferLen = 2 <<< 15 // 64k
         let buffer : byte[] = Array.zeroCreate(bufferLen)
 
@@ -73,6 +77,7 @@ module Serial =
             | exn -> failwithf "Failed to open serial port: %A" exn
         
         override __.WriteLine line = writeLine line
+        override __.WriteBytes bytes = writeBytes bytes
 
         member x.StartReading() =
             try

@@ -1,3 +1,6 @@
+## 0.2.4 - 2017-02-23
+- Add WriteBytes
+
 ## 0.2.3 - 2017-01-12
 - Use only synchronous read in the serial and TCP/IP read loops
 - Change to using arrays to buffer lines

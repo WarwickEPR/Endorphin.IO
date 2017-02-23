@@ -94,6 +94,7 @@ type LineAgent<'T>(logname:string) as this =
     let agent = MailboxProcessor.Start messageHandler
 
     abstract member WriteLine : string -> Async<unit>
+    abstract member WriteBytes : byte[] -> Async<unit>
     abstract member HandleLines : string[] -> unit
     default __.HandleLines(_) = ()
     abstract member ExtractReply : ReceivedLines -> ReceivedLines * 'T option
