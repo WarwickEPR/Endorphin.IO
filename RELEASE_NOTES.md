@@ -1,3 +1,6 @@
+## 0.3.0 - 2017-02-23
+- Add AwaitResponse
+
 ## 0.2.4 - 2017-02-23
 - Add WriteBytes
 - Handle IO exceptions - logging for now, not propagating

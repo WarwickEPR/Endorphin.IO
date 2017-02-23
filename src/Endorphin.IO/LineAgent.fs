@@ -10,6 +10,7 @@ type ExtractReply<'T> = ReceivedLines -> ReceivedLines * 'T option
 type private Message<'T> =
 | Receive of string
 | Send of string
+| Await of AsyncReplyChannel<'T>
 | Query of query: string * AsyncReplyChannel<'T>
 
 /// Agent to serialise writing linemode command and read emitted data into
@@ -85,6 +86,10 @@ type LineAgent<'T>(logname:string) as this =
                 let reply = replyChannel.Reply
                 return! loop received (reply :: repliesExpected)
 
+            | Await replyChannel ->
+                let reply = replyChannel.Reply
+                return! loop received (reply :: repliesExpected)
+
         }
         async {
             do! Async.SwitchToNewThread()
@@ -104,6 +109,7 @@ type LineAgent<'T>(logname:string) as this =
     member __.Receive a = a |> Receive |> agent.Post
     member __.Query q = (fun rc -> Query (q,rc)) |> agent.PostAndReply
     member __.QueryAsync q = (fun rc -> Query (q,rc)) |> agent.PostAndAsyncReply
+    member __.AwaitResponse = Await |> agent.PostAndAsyncReply
     member __.Logger = logger
 
 module LineAgent =
