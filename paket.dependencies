@@ -1,9 +1,9 @@
 source https://nuget.org/api/v2
 
-nuget FSharp.Core redirects: force
 
 nuget Endorphin.Core
 nuget log4net
+nuget FSharp.Core < 4.1
 nuget FSharp.Control.Reactive
 #nuget Rx-PlatformServices 
 

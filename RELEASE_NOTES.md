@@ -1,3 +1,6 @@
+## 0.3.1 - 2017-02-28
+- Reduce required version of FSharp.Core
+
 ## 0.3.0 - 2017-02-23
 - Add AwaitResponse
 
