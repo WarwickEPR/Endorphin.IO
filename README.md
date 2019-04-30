@@ -4,7 +4,7 @@ Utilities for basic communication such as line-mode IO to serial and TCP/IP inst
 
 Documentation:
 http://WarwickEPR.github.io/Endorphin.IO
-More documentation to follow...
+
 
 ## Maintainers
 
